@@ -1,18 +1,28 @@
-PY := /Users/cqr/.workbuddy/binaries/python/envs/default/bin/python
+# 解释器优先级：显式 PY= > .venv > PATH 里的 python3
+VENV ?= .venv
+PY ?= $(if $(wildcard $(VENV)/bin/python),$(VENV)/bin/python,$(shell command -v python3 2>/dev/null || command -v python))
 
-.PHONY: help install index serve smoke test eval eval-retrieval eval-intent eval-dialogue
+.PHONY: help venv install index serve smoke test eval eval-retrieval eval-intent \
+        eval-dialogue eval-multiturn eval-online bench scale embedder concurrency all clean
 
 help:
-	@echo "install        安装依赖"
-	@echo "index          重建知识库索引（含 LSA 训练）"
-	@echo "serve          启动 API + 轨迹面板 (http://127.0.0.1:8000)"
-	@echo "smoke          6 条典型链路冒烟"
-	@echo "test           单测"
-	@echo "eval           全部评测（检索 / 意图 / 端到端 / 规模）"
-	@echo "bench          记忆压缩量化 + 延迟分解"
-	@echo "scale          规模敏感性实验（近重复干扰注入）"
-	@echo "embedder       向量后端对比（hashing / lsa / api）"
-	@echo "all            一键跑完 test + eval + bench + embedder"
+	@echo "venv            创建 .venv（可选，未创建时直接用 python3）"
+	@echo "install         安装依赖"
+	@echo "index           重建知识库索引（含向量模型训练）"
+	@echo "serve           启动 API + 轨迹面板 (http://127.0.0.1:8000)"
+	@echo "smoke           6 条典型链路冒烟"
+	@echo "test            单测"
+	@echo "eval            全部离线评测（检索 / 意图 / 端到端 / 多轮 / 规模）"
+	@echo "eval-online     在线模式评测（需 .env 配好 LLM/Embedding），产出延迟与 token 成本"
+	@echo "bench           记忆压缩量化 + 延迟分解"
+	@echo "concurrency     退款幂等并发压测（50 并发撞同一请求）"
+	@echo "scale           规模敏感性实验（近重复干扰注入）"
+	@echo "embedder        向量后端对比（hashing / lsa / api）"
+	@echo "all             一键跑完 test + eval + bench + concurrency + embedder"
+
+venv:
+	$(PY) -m venv $(VENV)
+	@echo "已创建 $(VENV)：$(VENV)/bin/python -m pip install -r requirements.txt"
 
 install:
 	$(PY) -m pip install -r requirements.txt
@@ -32,8 +42,14 @@ test:
 eval:
 	$(PY) -m scripts.run_eval all
 
+eval-online:
+	$(PY) -m scripts.run_online_eval
+
 bench:
 	$(PY) -m scripts.bench all
+
+concurrency:
+	$(PY) -m scripts.concurrency_check
 
 scale:
 	$(PY) -m scripts.run_eval scale
@@ -50,4 +66,11 @@ eval-intent:
 eval-dialogue:
 	$(PY) -m scripts.run_eval dialogue
 
-all: test eval bench embedder
+eval-multiturn:
+	$(PY) -m scripts.run_eval multiturn
+
+all: test eval bench concurrency embedder
+
+clean:
+	find . -name __pycache__ -type d -prune -exec rm -rf {} +
+	rm -rf .mooki_index
