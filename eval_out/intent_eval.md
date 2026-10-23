@@ -1,26 +1,26 @@
 ## 意图识别评测
 
-### 一、同源评测（n=40，**分数偏高，只看机制不看绝对值**）
+### 一、同源评测（n=105，**分数偏高，只看机制不看绝对值**）
 
 > golden query 是围绕 intent exemplar 的同一批业务话术写的，三条通道里有两条直接在 exemplar 上建库/训练，因此这里的分数必然接近满分 —— 这是泄漏，不是能力。可信结论看下面第二张表。
 
-- Accuracy: **0.9500**
-- Macro-F1: **0.9496**
-- 弃权率(need_clarify): 2.50%
-- 作答样本准确率: 0.9744
+- Accuracy: **0.7905**
+- Macro-F1: **0.7992**
+- 弃权率(need_clarify): 12.38%
+- 作答样本准确率: 0.8804
 
 | 意图 | support | Precision | Recall | F1 |
 |---|---|---|---|---|
-| order_status | 4 | 0.750 | 0.750 | 0.750 |
-| refund | 4 | 1.000 | 0.750 | 0.857 |
-| return_exchange | 4 | 1.000 | 1.000 | 1.000 |
-| logistics | 4 | 0.800 | 1.000 | 0.889 |
-| complaint | 4 | 1.000 | 1.000 | 1.000 |
-| product_consult | 4 | 1.000 | 1.000 | 1.000 |
-| invoice | 4 | 1.000 | 1.000 | 1.000 |
-| promo | 4 | 1.000 | 1.000 | 1.000 |
-| account | 4 | 1.000 | 1.000 | 1.000 |
-| other | 4 | 1.000 | 1.000 | 1.000 |
+| order_status | 11 | 0.467 | 0.636 | 0.538 |
+| refund | 12 | 0.714 | 0.833 | 0.769 |
+| return_exchange | 11 | 0.818 | 0.818 | 0.818 |
+| logistics | 11 | 0.643 | 0.818 | 0.720 |
+| complaint | 11 | 1.000 | 0.909 | 0.952 |
+| product_consult | 10 | 1.000 | 0.600 | 0.750 |
+| invoice | 10 | 1.000 | 0.700 | 0.824 |
+| promo | 10 | 0.889 | 0.800 | 0.842 |
+| account | 10 | 1.000 | 1.000 | 1.000 |
+| other | 9 | 0.778 | 0.778 | 0.778 |
 
 ### 二、留出实验（exemplar 5 折交叉，可信版本）
 
@@ -44,22 +44,32 @@
 
 | 通道组合 | Accuracy | Macro-F1 | 弃权率 | 作答准确率 |
 |---|---|---|---|---|
-| rule_only | 0.7750 | 0.7855 | 22.50% | 0.9355 |
-| dense_only | 1.0000 | 1.0000 | 0.00% | 1.0000 |
-| llm_only | 1.0000 | 1.0000 | 0.00% | 1.0000 |
-| rule+dense | 0.9500 | 0.9496 | 0.00% | 0.9500 |
-| fusion(三路) | 0.9500 | 0.9496 | 2.50% | 0.9744 |
+| rule_only | 0.6190 | 0.6502 | 34.29% | 0.8696 |
+| dense_only | 0.7714 | 0.7753 | 7.62% | 0.8041 |
+| llm_only | 0.7905 | 0.7992 | 27.62% | 0.9342 |
+| rule+dense | 0.8000 | 0.8043 | 5.71% | 0.8283 |
+| fusion(三路) | 0.7905 | 0.7992 | 12.38% | 0.8804 |
 
 #### 通道互补性（谁救回了谁）
 
 | 通道对 | 两者都对 | 仅前者对 | 仅后者对 | 都错 | 并集正确 | 互补率 |
 |---|---|---|---|---|---|---|
-| dense_only vs rule_only | 31 | 9 | 0 | 0 | 40 | 22.50% |
-| dense_only vs llm_only | 40 | 0 | 0 | 0 | 40 | 0.00% |
-| rule_only vs llm_only | 31 | 0 | 9 | 0 | 40 | 22.50% |
+| dense_only vs rule_only | 59 | 22 | 6 | 18 | 87 | 32.18% |
+| dense_only vs llm_only | 76 | 5 | 7 | 17 | 88 | 13.64% |
+| rule_only vs llm_only | 57 | 8 | 26 | 14 | 91 | 37.36% |
 
 > 互补率非零说明该路不是冗余的。但要注意：在 exemplar 上训练的通道会同时满分，互补率因此被压到 0 —— 这本身就是泄漏的又一个证据。
 
 ### 错分样本（同源评测）
 - `帮我查下订单到哪了` → 预测 logistics（gold order_status，conf=0.47，margin=0.15）
 - `取消订单以后钱退哪去了` → 预测 order_status（gold refund，conf=0.44，margin=0.12）
+- `订单怎么查物流到哪了` → 预测 logistics（gold order_status，conf=0.53，margin=0.39）
+- `刚付款什么时候能发货` → 预测 logistics（gold order_status，conf=0.62，margin=0.62）
+- `显示待收货但是我还没收到` → 预测 logistics（gold order_status，conf=0.65，margin=0.65）
+- `取消订单后钱多久回来` → 预测 order_status（gold refund，conf=0.44，margin=0.13）
+- `包装拆了还能退吗` → 预测 refund（gold return_exchange，conf=0.74，margin=0.74）
+- `要退回去怎么寄` → 预测 refund（gold return_exchange，conf=0.36，margin=0.25）
+- `包裹在分拨中心停了很久` → 预测 order_status（gold logistics，conf=0.30，margin=0.30）
+- `同城一般几天到` → 预测 order_status（gold logistics，conf=0.30，margin=0.30）
+- `客服一直敷衍我` → 预测 other（gold complaint，conf=0.63，margin=0.63）
+- `这个和另一款差别大吗` → 预测 other（gold product_consult，conf=0.38，margin=0.27）

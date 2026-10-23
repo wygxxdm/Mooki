@@ -1,0 +1,10 @@
+{"id": "m01", "desc": "退款追问：后两轮不带单号，且不应重复申请退款", "turns": ["SO20261018006 我不想要了，能退款吗", "那钱多久能到账", "退款进度在哪里看"], "slot_checks": [{"turn": 3, "order_scoped": true}], "must_include": [{"turn": 2, "keywords": ["工作日"]}]}
+{"id": "m02", "desc": "物流追问：从查单到催件，单号靠槽位继承", "turns": ["SO20260512001 这个单到哪了", "三天没更新了怎么办", "帮我催一下"], "slot_checks": [{"turn": 2, "order_scoped": true}], "must_include": [{"turn": 2, "keywords": ["72"]}]}
+{"id": "m03", "desc": "退货超期：第二句不带单号仍应查得到这单", "turns": ["SO20260518002 我想无理由退货", "已经过了七天了怎么办"], "slot_checks": [{"turn": 2, "order_scoped": true}], "must_include": [{"turn": 1, "keywords": ["7"]}]}
+{"id": "m04", "desc": "发票换开：先问能不能改，再问要多久", "turns": ["发票抬头写错了能重开吗", "要多久"], "slot_checks": [], "must_include": [{"turn": 1, "keywords": ["红冲"]}]}
+{"id": "m05", "desc": "价保：先问政策再问怎么申请", "turns": ["刚买完就降价了", "能退多少差价"], "slot_checks": [], "must_include": [{"turn": 1, "keywords": ["15"]}]}
+{"id": "m06", "desc": "投诉升级：第二句追问工单号，应带出上一轮建的工单", "turns": ["我要投诉，再不解决就去12315", "工单号多少"], "slot_checks": [], "must_include": [{"turn": 2, "keywords": ["TK"]}]}
+{"id": "m07", "desc": "换货：尺码不合适，追问换货时效", "turns": ["SO20261018006 尺码买小了想换大一号", "换货要几天"], "slot_checks": [{"turn": 2, "order_scoped": true}], "must_include": [{"turn": 2, "keywords": ["换货"]}]}
+{"id": "m08", "desc": "账号：验证码收不到，追问换绑", "turns": ["验证码一直收不到登不上", "那怎么换绑"], "slot_checks": [], "must_include": [{"turn": 2, "keywords": ["换绑"]}]}
+{"id": "m09", "desc": "优惠券：用不了，追问过期补发", "turns": ["优惠券为什么下单用不了", "过期的券能补吗"], "slot_checks": [], "must_include": [{"turn": 2, "keywords": ["补发"]}]}
+{"id": "m10", "desc": "物流异常：显示签收但没收到，追问赔付（纯政策问，不必再查单）", "turns": ["SO20260512001 显示签收了但我没收到", "那包裹丢了怎么赔"], "slot_checks": [], "must_include": [{"turn": 2, "keywords": ["赔"]}]}

@@ -22,7 +22,11 @@ class QueryRewriter:
     def rewrite(self, query: str, history: list[str] | None = None) -> str:
         if not query.strip():
             return query
+        # 缓存键必须带历史指纹：同一句"那这个能退吗"在不同上下文里该改写成不同查询，
+        # 只按 query 缓存会让后一个会话拿到前一个会话的改写结果。
         key = normalize_text(query)
+        if history:
+            key = f"{key}||{normalize_text(' '.join(history[-2:]))[-80:]}"
         cached = self.cache.get(key)
         if cached is not None:
             self.stats["cache_hits"] += 1

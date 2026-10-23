@@ -1,0 +1,388 @@
+{
+  "n_cases": 10,
+  "n_turns": 22,
+  "pass_rate": 0.6,
+  "slot_retention_rate": 0.75,
+  "slot_checks": 4,
+  "side_effect_replay_cases": [],
+  "failed_cases": [
+    "m03",
+    "m08",
+    "m09",
+    "m10"
+  ],
+  "details": [
+    {
+      "id": "m01",
+      "desc": "退款追问：后两轮不带单号，且不应重复申请退款",
+      "turns": [
+        {
+          "turn": 1,
+          "message": "SO20261018006 我不想要了，能退款吗",
+          "reply": "已为你核实：退款判断：可退，可退金额 139.0 元，阻断项 无，签收至今 3 天，退款单号 RFABDECF97D3，当前状态 refund_pending；订单 SO20261018006：状态 已完成，商品 便携榨汁杯 400ml，实付 139.0 元，下单 2026-10-18 09:12:00，签收 2026-10-20 15:41:00。按平台规则，跨境订单退款需扣除已产生的国际运费与关税，实际退款金额以清关状态为准。已清关的订单需先完成退运才能退款，退运周期通常为 15 至 30 天。",
+          "intent": "refund",
+          "tools": [
+            "order.query",
+            "refund.apply",
+            "kb.search"
+          ],
+          "handoff": false
+        },
+        {
+          "turn": 2,
+          "message": "那钱多久能到账",
+          "reply": "按平台规则，订单退款成功后，款项按原支付渠道退回。微信、支付宝余额类渠道一般在 1 个工作日内到账；另外，每次退款申请会生成唯一退款单号，格式为 RF 加 10 位十六进制字符。",
+          "intent": "product_consult",
+          "tools": [
+            "kb.search"
+          ],
+          "handoff": false
+        },
+        {
+          "turn": 3,
+          "message": "退款进度在哪里看",
+          "reply": "已为你核实：订单 SO20261018006：状态 已完成，商品 便携榨汁杯 400ml，实付 139.0 元，下单 2026-10-18 09:12:00，签收 2026-10-20 15:41:00。按平台规则，退款进度分五个节点：申请提交、商家审核、平台审核、退款中、退款完成。用户可在订单详情页的售后记录中查看当前节点与各节点时间。",
+          "intent": "refund",
+          "tools": [
+            "order.query",
+            "kb.search"
+          ],
+          "handoff": false
+        }
+      ],
+      "slot_checks": 1,
+      "empty_turns": [],
+      "slot_failures": [],
+      "replayed_side_effects": {},
+      "keyword_failures": [],
+      "passed": true
+    },
+    {
+      "id": "m02",
+      "desc": "物流追问：从查单到催件，单号靠槽位继承",
+      "turns": [
+        {
+          "turn": 1,
+          "message": "SO20260512001 这个单到哪了",
+          "reply": "已为你核实：物流：顺丰速运 SF1234567890，最新 派送中，更新于 2026-05-20 09:12:00。按平台规则，派送失败常见于地址不详、电话无法接通、收件人拒收、超区不派送、快递柜满柜。承运商会连续派送 3 次，均失败后包裹退回商家。",
+          "intent": "logistics",
+          "tools": [
+            "logistics.track"
+          ],
+          "handoff": false
+        },
+        {
+          "turn": 2,
+          "message": "三天没更新了怎么办",
+          "reply": "已为你核实：物流：顺丰速运 SF1234567890，最新 派送中，更新于 2026-05-20 09:12:00。按平台规则，物流轨迹超过 72 小时无更新，视为异常件。处理顺序：先在物流详情页点击\"催件\"，承运商会在 24 小时内回访；",
+          "intent": "logistics",
+          "tools": [
+            "logistics.track"
+          ],
+          "handoff": false
+        },
+        {
+          "turn": 3,
+          "message": "帮我催一下",
+          "reply": "已为你核实：订单 SO20260512001：状态 待收货，商品 无线降噪耳机 Pro，实付 269.0 元，下单 2026-05-12 10:21:03，签收 未签收。按平台规则，平台合作承运商包括顺丰速运、京东物流、中通、圆通、韵达、申通、邮政 EMS 与极兔。商家可在合作范围内自选承运商，偏远地区可能仅支持邮政。",
+          "intent": "order_status",
+          "tools": [
+            "order.query"
+          ],
+          "handoff": false
+        }
+      ],
+      "slot_checks": 1,
+      "empty_turns": [],
+      "slot_failures": [],
+      "replayed_side_effects": {},
+      "keyword_failures": [],
+      "passed": true
+    },
+    {
+      "id": "m03",
+      "desc": "退货超期：第二句不带单号仍应查得到这单",
+      "turns": [
+        {
+          "turn": 1,
+          "message": "SO20260518002 我想无理由退货",
+          "reply": "已为你核实：退货单未创建，原因 exceed_no_reason_window:155d，签收至今 155 天；如存在质量问题，可按质量问题申请退换，不受 7 天限制。按平台规则，自签收之日起 7 个自然日内可申请无理由退货，商品需保持完好、不影响二次销售，配件、赠品、包装、说明书齐全。定制类、生鲜易腐类、已拆封的音像制品与软件、贴身衣物等不适用无理由退货。",
+          "intent": "return_exchange",
+          "tools": [
+            "order.query",
+            "return.create",
+            "kb.search"
+          ],
+          "handoff": false
+        },
+        {
+          "turn": 2,
+          "message": "已经过了七天了怎么办",
+          "reply": "按平台规则，可按订单号、商品名称、下单时间范围查询订单，订单号格式为 SO 加 11 位数字。订单列表默认展示近 6 个月记录，更早的订单需在\"历史订单\"中筛选查询。另外，退货申请通过后需在 7 天内填写退回物流单号，超时未填写申请自动关闭。",
+          "intent": "product_consult",
+          "tools": [
+            "kb.search"
+          ],
+          "handoff": false
+        }
+      ],
+      "slot_checks": 1,
+      "empty_turns": [],
+      "slot_failures": [
+        {
+          "turn": 2,
+          "missing": "order_scoped_tool"
+        }
+      ],
+      "replayed_side_effects": {},
+      "keyword_failures": [],
+      "passed": false
+    },
+    {
+      "id": "m04",
+      "desc": "发票换开：先问能不能改，再问要多久",
+      "turns": [
+        {
+          "turn": 1,
+          "message": "发票抬头写错了能重开吗",
+          "reply": "按平台规则，发票抬头、税号填错可申请换开，需先对原发票做红冲（冲红）处理，红冲完成后再重新开具，整体耗时 3 至 5 个工作日。已用于报销或已认证抵扣的专票无法直接红冲，需提供税务机关开具的红字信息表。另外，抬头分为个人与企业两种。",
+          "intent": "invoice",
+          "tools": [
+            "kb.search"
+          ],
+          "handoff": false
+        },
+        {
+          "turn": 2,
+          "message": "要多久",
+          "reply": "按平台规则，抬头分为个人与企业两种。个人抬头可填姓名或\"个人\"，不能填写单位名称。另外，发票抬头、税号填错可申请换开，需先对原发票做红冲（冲红）处理，红冲完成后再重新开具，整体耗时 3 至 5 个工作日。",
+          "intent": "product_consult",
+          "tools": [
+            "kb.search"
+          ],
+          "handoff": false
+        }
+      ],
+      "slot_checks": 0,
+      "empty_turns": [],
+      "slot_failures": [],
+      "replayed_side_effects": {},
+      "keyword_failures": [],
+      "passed": true
+    },
+    {
+      "id": "m05",
+      "desc": "价保：先问政策再问怎么申请",
+      "turns": [
+        {
+          "turn": 1,
+          "message": "刚买完就降价了",
+          "reply": "按平台规则，自签收之日起 15 个自然日内，若同一商品在同一店铺出现降价（不含优惠券、红包导致的实付差异），可申请价保，退还差价至原支付渠道。价保不适用于秒杀、限时特价、清仓、以及使用了大额券的订单。另外，标价虚高后打折、活动前临时提价、以\"原价\"标注从未成交的价格，均属于价格违规。",
+          "intent": "promo",
+          "tools": [
+            "kb.search"
+          ],
+          "handoff": false
+        },
+        {
+          "turn": 2,
+          "message": "能退多少差价",
+          "reply": "按平台规则，自签收之日起 15 个自然日内，若同一商品在同一店铺出现降价（不含优惠券、红包导致的实付差异），可申请价保，退还差价至原支付渠道。价保不适用于秒杀、限时特价、清仓、以及使用了大额券的订单。另外，百亿补贴商品由平台补贴差价，价格显著低于日常价，不参与任何优惠券与满减活动。",
+          "intent": "refund",
+          "tools": [
+            "kb.search"
+          ],
+          "handoff": false
+        }
+      ],
+      "slot_checks": 0,
+      "empty_turns": [],
+      "slot_failures": [],
+      "replayed_side_effects": {},
+      "keyword_failures": [],
+      "passed": true
+    },
+    {
+      "id": "m06",
+      "desc": "投诉升级：第二句追问工单号，应带出上一轮建的工单",
+      "turns": [
+        {
+          "turn": 1,
+          "message": "我要投诉，再不解决就去12315",
+          "reply": "已为你转接人工客服并创建工单 TKEFCB202C31，预计 2 小时内与你联系。你的问题我已完整记录，无需重复描述。",
+          "intent": "complaint",
+          "tools": [],
+          "handoff": true
+        },
+        {
+          "turn": 2,
+          "message": "工单号多少",
+          "reply": "按平台规则，投诉受理后生成工单编号，格式为 TK 加 10 位十六进制字符。用户可在\"我的-投诉记录\"中查询工单状态，状态分为待分配、处理中、待补充材料、已结案。另外，每次退款申请会生成唯一退款单号，格式为 RF 加 10 位十六进制字符。",
+          "intent": "order_status",
+          "tools": [
+            "kb.search"
+          ],
+          "handoff": false
+        }
+      ],
+      "slot_checks": 0,
+      "empty_turns": [],
+      "slot_failures": [],
+      "replayed_side_effects": {},
+      "keyword_failures": [],
+      "passed": true
+    },
+    {
+      "id": "m07",
+      "desc": "换货：尺码不合适，追问换货时效",
+      "turns": [
+        {
+          "turn": 1,
+          "message": "SO20261018006 尺码买小了想换大一号",
+          "reply": "已为你核实：退货单已创建 RT9550BEEFA8，签收至今 3 天；订单 SO20261018006：状态 已完成，商品 便携榨汁杯 400ml，实付 139.0 元，下单 2026-10-18 09:12:00，签收 2026-10-20 15:41:00。按平台规则，换货需先在订单页提交换货申请并选择换货原因与目标规格，商家同意后按指引发回商品。商家签收验收通过后 48 小时内发出新商品，换货全程一般在 7 至 10 个自然日。",
+          "intent": "return_exchange",
+          "tools": [
+            "order.query",
+            "return.create",
+            "kb.search"
+          ],
+          "handoff": false
+        },
+        {
+          "turn": 2,
+          "message": "换货要几天",
+          "reply": "已为你核实：订单 SO20261018006：状态 已完成，商品 便携榨汁杯 400ml，实付 139.0 元，下单 2026-10-18 09:12:00，签收 2026-10-20 15:41:00。按平台规则，换货需先在订单页提交换货申请并选择换货原因与目标规格，商家同意后按指引发回商品。商家签收验收通过后 48 小时内发出新商品，换货全程一般在 7 至 10 个自然日。",
+          "intent": "return_exchange",
+          "tools": [
+            "order.query",
+            "kb.search"
+          ],
+          "handoff": false
+        }
+      ],
+      "slot_checks": 1,
+      "empty_turns": [],
+      "slot_failures": [],
+      "replayed_side_effects": {},
+      "keyword_failures": [],
+      "passed": true
+    },
+    {
+      "id": "m08",
+      "desc": "账号：验证码收不到，追问换绑",
+      "turns": [
+        {
+          "turn": 1,
+          "message": "验证码一直收不到登不上",
+          "reply": "按平台规则，商家验收不通过需上传开箱视频与问题说明，用户可在 3 天内申诉。常见不通过原因包括商品有使用痕迹、配件缺失、退回非原商品、包装严重破损。另外，账号异常登录、密码遗忘、疑似被盗时，优先通过手机号验证码自助找回。",
+          "intent": "account",
+          "tools": [
+            "kb.search"
+          ],
+          "handoff": false
+        },
+        {
+          "turn": 2,
+          "message": "那怎么换绑",
+          "reply": "按平台规则，商家验收不通过需上传开箱视频与问题说明，用户可在 3 天内申诉。常见不通过原因包括商品有使用痕迹、配件缺失、退回非原商品、包装严重破损。另外，商品存在质量缺陷、与描述不符、发错货、少发漏发的情形，不受 7 天限制，在保修期内均可申请。",
+          "intent": "account",
+          "tools": [
+            "kb.search"
+          ],
+          "handoff": false
+        }
+      ],
+      "slot_checks": 0,
+      "empty_turns": [],
+      "slot_failures": [],
+      "replayed_side_effects": {},
+      "keyword_failures": [
+        {
+          "turn": 2,
+          "missing": [
+            "换绑"
+          ]
+        }
+      ],
+      "passed": false
+    },
+    {
+      "id": "m09",
+      "desc": "优惠券：用不了，追问过期补发",
+      "turns": [
+        {
+          "turn": 1,
+          "message": "优惠券为什么下单用不了",
+          "reply": "按平台规则，优惠券需满足使用门槛（满减金额）、适用品类、有效期限三个条件才能抵扣。券在提交订单时自动匹配最优组合，也可在订单页手动切换。另外，用券失败的常见原因：券已过期、未达门槛、商品不在适用范围、与其他优惠互斥、券已被其他订单占用、账号被风控限制。",
+          "intent": "promo",
+          "tools": [
+            "kb.search"
+          ],
+          "handoff": false
+        },
+        {
+          "turn": 2,
+          "message": "过期的券能补吗",
+          "reply": "按平台规则，优惠券需满足使用门槛（满减金额）、适用品类、有效期限三个条件才能抵扣。券在提交订单时自动匹配最优组合，也可在订单页手动切换。另外，用券失败的常见原因：券已过期、未达门槛、商品不在适用范围、与其他优惠互斥、券已被其他订单占用、账号被风控限制。",
+          "intent": "promo",
+          "tools": [
+            "kb.search"
+          ],
+          "handoff": false
+        }
+      ],
+      "slot_checks": 0,
+      "empty_turns": [],
+      "slot_failures": [],
+      "replayed_side_effects": {},
+      "keyword_failures": [
+        {
+          "turn": 2,
+          "missing": [
+            "补发"
+          ]
+        }
+      ],
+      "passed": false
+    },
+    {
+      "id": "m10",
+      "desc": "物流异常：显示签收但没收到，追问赔付（纯政策问，不必再查单）",
+      "turns": [
+        {
+          "turn": 1,
+          "message": "SO20260512001 显示签收了但我没收到",
+          "reply": "已为你核实：物流：顺丰速运 SF1234567890，最新 派送中，更新于 2026-05-20 09:12:00。按平台规则，显示签收但实际未收到时，先确认是否由家人、门卫、快递柜代收，并检查短信取件码。确认未收到后，在订单页发起\"未收到货\"申诉，承运商需在 24 小时内提供签收凭证（签收人、签收照片、GPS 定位）。",
+          "intent": "logistics",
+          "tools": [
+            "logistics.track"
+          ],
+          "handoff": false
+        },
+        {
+          "turn": 2,
+          "message": "那包裹丢了怎么赔",
+          "reply": "按平台规则，退货申请通过后需在 7 天内填写退回物流单号，超时未填写申请自动关闭。单号必须真实有效且与承运商可查，填写虚假单号会被判定为无效退货并计入风险。另外，跨境包裹经保税仓或直邮两种模式发出。",
+          "intent": "product_consult",
+          "tools": [
+            "kb.search"
+          ],
+          "handoff": false
+        }
+      ],
+      "slot_checks": 0,
+      "empty_turns": [],
+      "slot_failures": [],
+      "replayed_side_effects": {},
+      "keyword_failures": [
+        {
+          "turn": 2,
+          "missing": [
+            "赔"
+          ]
+        }
+      ],
+      "passed": false
+    }
+  ]
+}

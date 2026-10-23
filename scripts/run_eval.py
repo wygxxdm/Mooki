@@ -4,6 +4,7 @@
     python -m scripts.run_eval retrieval    # 检索消融
     python -m scripts.run_eval intent       # 意图识别
     python -m scripts.run_eval dialogue     # 端到端对话
+    python -m scripts.run_eval multiturn    # 多轮会话（槽位继承 / 副作用重放）
     python -m scripts.run_eval all
     python -m scripts.run_eval all --online # 用真实模型（结果不可复现，仅看观感）
 
@@ -66,6 +67,16 @@ def main(argv: list[str]) -> int:
 
         report = run_dialogue_eval(runtime)
         print(render_dialogue(report))
+
+    if target in ("multiturn", "all"):
+        from mooki.eval.multiturn_eval import render_markdown as render_multiturn
+        from mooki.eval.multiturn_eval import run_multiturn_eval
+
+        # 多轮评测必须用独立账本：前面的对话评测已经把 SO20261018006 退过款了，
+        # 共用账本会让"首轮申请退款"直接命中幂等跳过，测的就不是多轮本身。
+        mt_runtime = runtime if target == "multiturn" else AgentRuntime(settings=isolated_settings())
+        report = run_multiturn_eval(mt_runtime)
+        print(render_multiturn(report))
 
     if target in ("scale", "all"):
         from mooki.eval.scale_eval import render_markdown as render_scale

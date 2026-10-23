@@ -1,7 +1,7 @@
 {
-  "base_chunks": 39,
-  "variant_pool": 468,
-  "queries": 40,
+  "base_chunks": 134,
+  "variant_pool": 1608,
+  "queries": 137,
   "sizes": [
     39,
     139,
@@ -11,79 +11,79 @@
   "results": {
     "direct": {
       "39": {
-        "chunks": 39,
-        "recall@5": 0.875,
-        "ndcg@5": 0.8131,
+        "chunks": 134,
+        "recall@5": 0.8321,
+        "ndcg@5": 0.6883,
         "empty_rate": 0.0
       },
       "139": {
         "chunks": 139,
-        "recall@5": 0.9,
-        "ndcg@5": 0.8146,
+        "recall@5": 0.8394,
+        "ndcg@5": 0.6918,
         "empty_rate": 0.0
       },
       "239": {
         "chunks": 239,
-        "recall@5": 0.875,
-        "ndcg@5": 0.8146,
+        "recall@5": 0.8175,
+        "ndcg@5": 0.6862,
         "empty_rate": 0.0
       },
       "439": {
         "chunks": 439,
-        "recall@5": 0.85,
-        "ndcg@5": 0.8131,
+        "recall@5": 0.7956,
+        "ndcg@5": 0.6712,
         "empty_rate": 0.0
       }
     },
     "bm25": {
       "39": {
-        "chunks": 39,
-        "recall@5": 0.9,
-        "ndcg@5": 0.821,
-        "empty_rate": 0.025
+        "chunks": 134,
+        "recall@5": 0.8321,
+        "ndcg@5": 0.6801,
+        "empty_rate": 0.0
       },
       "139": {
         "chunks": 139,
-        "recall@5": 0.9,
-        "ndcg@5": 0.8129,
-        "empty_rate": 0.025
+        "recall@5": 0.8321,
+        "ndcg@5": 0.6801,
+        "empty_rate": 0.0
       },
       "239": {
         "chunks": 239,
-        "recall@5": 0.9,
-        "ndcg@5": 0.8096,
-        "empty_rate": 0.025
+        "recall@5": 0.8248,
+        "ndcg@5": 0.6741,
+        "empty_rate": 0.0
       },
       "439": {
         "chunks": 439,
-        "recall@5": 0.9,
-        "ndcg@5": 0.8079,
-        "empty_rate": 0.025
+        "recall@5": 0.8175,
+        "ndcg@5": 0.6725,
+        "empty_rate": 0.0
       }
     },
     "full": {
       "39": {
-        "chunks": 39,
-        "recall@5": 0.95,
-        "ndcg@5": 0.8821,
+        "chunks": 134,
+        "recall@5": 0.8467,
+        "ndcg@5": 0.7087,
         "empty_rate": 0.0
       },
       "139": {
         "chunks": 139,
-        "recall@5": 0.875,
-        "ndcg@5": 0.8289,
+        "recall@5": 0.854,
+        "ndcg@5": 0.7088,
         "empty_rate": 0.0
       },
       "239": {
         "chunks": 239,
-        "recall@5": 0.9,
-        "ndcg@5": 0.8539,
+        "recall@5": 0.854,
+        "ndcg@5": 0.7055,
         "empty_rate": 0.0
       },
       "439": {
         "chunks": 439,
-        "recall@5": 0.9,
-        "ndcg@5": 0.8631,
+        "recall@5": 0.8248,
+        "ndcg@5": 0.6933,
         "empty_rate": 0.0
       }
     }

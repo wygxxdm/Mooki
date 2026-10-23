@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import unittest
 
+from mooki.core.storage import MemoryKV
 from mooki.graph.runtime import AgentRuntime
 
 
@@ -26,10 +27,11 @@ class _StubServices:
         self.ledger = _StubLedger(state)
 
 
-def runtime_with_ledger(state: str | None) -> AgentRuntime:
-    """只注入账本，绕开 __init__ 里的索引与模型加载。"""
+def runtime_with_ledger(state: str | None, kv: MemoryKV | None = None) -> AgentRuntime:
+    """只注入账本与会话 KV，绕开 __init__ 里的索引与模型加载。"""
     rt = AgentRuntime.__new__(AgentRuntime)
     rt.services = _StubServices(state)  # type: ignore[assignment]
+    rt.kv = kv or MemoryKV()
     return rt
 
 
@@ -61,6 +63,22 @@ class TestSideEffectDone(unittest.TestCase):
     def test_no_order_id_never_blocks(self):
         rt = runtime_with_ledger("refund_pending")
         self.assertEqual(rt._side_effect_done("refund.apply", {}, "我要退款"), "")
+
+    def test_session_registry_blocks_return_create(self):
+        """return.create 没有订单状态机，只能靠会话登记表兜住重复调用。"""
+        kv = MemoryKV()
+        rt = runtime_with_ledger(None, kv)
+        args = {"order_id": "SO20260518002"}
+        self.assertEqual(rt._side_effect_done("return.create", args, "我要换货"), "")
+        kv.set(rt._applied_key(args, "return.create"), "1", ttl=600)
+        self.assertEqual(rt._side_effect_done("return.create", args, "我要换货"), "session_applied")
+
+    def test_registry_is_per_tool_and_order(self):
+        kv = MemoryKV()
+        rt = runtime_with_ledger(None, kv)
+        kv.set(rt._applied_key({"order_id": "SO1"}, "return.create"), "1", ttl=600)
+        self.assertEqual(rt._side_effect_done("return.create", {"order_id": "SO2"}, "换货"), "")
+        self.assertEqual(rt._side_effect_done("invoice.issue", {"order_id": "SO1"}, "开发票"), "")
 
 
 if __name__ == "__main__":

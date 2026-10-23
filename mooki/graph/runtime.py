@@ -59,6 +59,13 @@ except Exception:  # noqa: BLE001 - 未安装时退回等价最小实现，保�
     GRAPH_ENGINE = "mini"
 
 
+# 会改变外部状态的写操作。规划层对它们做幂等拦截，避免多轮追问重放。
+SIDE_EFFECT_TOOLS = frozenset(
+    {"refund.apply", "refund.cancel", "return.create", "invoice.issue", "ticket.create"}
+)
+_APPLIED_TTL_S = 3600
+
+
 class AgentRuntime:
     def __init__(self, settings: Settings | None = None):
         self.settings = settings or default_settings
@@ -272,19 +279,33 @@ class AgentRuntime:
         return {"plan": {"tool": tool, "args": args}, "remaining_tools": remaining}
 
     def _side_effect_done(self, tool: str, args: dict, message: str) -> str:
-        """写操作是否已在账本中生效。返回非空字符串表示应跳过，值即跳过原因。"""
+        """写操作是否已经生效。返回非空字符串表示应跳过，值即跳过原因。
+
+        两级判断：
+        1. 会话级登记表 —— 本次会话里已经成功执行过的写操作，覆盖 return.create /
+           invoice.issue 这类没有订单状态机的工具；
+        2. 账本级状态 —— refund.apply / refund.cancel 以订单状态机为准，
+           它跨会话也成立（用户明天再来问，仍不该重复退）。
+        """
         order_id = str(args.get("order_id") or "")
         if not order_id:
             return ""
-        # 用户明确要求"再退一次/重新退"，交给账本幂等键处理，不做规划层拦截
+        # 用户明确要求"再退一次/重新申请"，交给账本幂等键处理，不做规划层拦截
         if any(k in message for k in ("再退", "重新退", "再申请", "重新申请")):
             return ""
+        if tool in SIDE_EFFECT_TOOLS:
+            if self.kv.get(self._applied_key(args, tool)):
+                return "session_applied"
         state = self.services.ledger.status(order_id)
         if tool == "refund.apply" and state in ("refund_pending", "refunded"):
             return f"ledger_state={state}"
         if tool == "refund.cancel" and state != "refund_pending":
             return f"ledger_state={state or 'none'}"
         return ""
+
+    def _applied_key(self, args: dict, tool: str) -> str:
+        order_id = str(args.get("order_id") or "")
+        return f"applied:{tool}:{order_id}"
 
     def _n_act(self, state: AgentState) -> dict:
         plan = state.get("plan") or {}
@@ -294,10 +315,16 @@ class AgentRuntime:
             session_id=state["session_id"],
             trace_id=state["trace_id"],
             intent=state.get("intent"),
-            services={"retriever": self.retriever},
+            services={"retriever": self.retriever, "history": state.get("history") or []},
         )
         self.trace.emit(state["trace_id"], "tool_call", "act", {"tool": tool, "args": args})
         result = self.registry.call(tool, args, ctx, whitelist=state["allowed_tools"])
+
+        # 写操作成功后登记，供下一轮规划层判断"这件事已经做过了"
+        if tool in SIDE_EFFECT_TOOLS and result.ok:
+            data = result.data if isinstance(result.data, dict) else {}
+            if data.get("created") or data.get("found") or data.get("refund_id") or data.get("ticket_id"):
+                self.kv.set(self._applied_key(args, tool), "1", ttl=_APPLIED_TTL_S)
 
         preview = str(result.data)[:400] if result.data is not None else ""
         self.trace.emit(

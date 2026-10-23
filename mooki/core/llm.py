@@ -27,6 +27,36 @@ ANSWER_SYSTEM = (
     "如果用户给了订单号且系统已查到单据数据，必须结合单据数据回答，不要只讲政策。"
 )
 
+_FOLLOWUP_MARKERS = ("那", "这", "它", "还", "再", "呢")
+_ANAPHORA = ("这个", "那个", "这种情况", "刚才", "上面")
+
+
+def _looks_like_followup(text: str) -> bool:
+    """短句或以指代词开头，视为追问句 —— 这类句子脱离上下文几乎没有检索价值。"""
+    stripped = text.strip()
+    if len(stripped) <= 12:
+        return True
+    if any(stripped.startswith(m) for m in _FOLLOWUP_MARKERS):
+        return True
+    return any(a in stripped for a in _ANAPHORA)
+
+
+def _last_user_turn(prompt: str) -> str:
+    """从改写 prompt 里取上一轮用户原话（历史以 list repr 形式拼在 prompt 里）。"""
+    if "历史：" not in prompt:
+        return ""
+    block = prompt.split("历史：", 1)[1].split("原始问题：", 1)[0].strip()
+    try:
+        import ast
+
+        turns = ast.literal_eval(block)
+        if isinstance(turns, list) and turns:
+            return str(turns[-1]).strip()
+    except (ValueError, SyntaxError):
+        pass
+    found = re.findall(r"['\"]([^'\"]{2,60})['\"]", block)
+    return found[-1].strip() if found else ""
+
 
 def _extract_json(text: str) -> dict[str, Any] | None:
     text = text.strip()
@@ -125,6 +155,13 @@ class HeuristicChatClient:
         for sources, targets in cls._REWRITE_SYNONYMS:
             if any(s in text for s in sources):
                 extra.extend(t for t in targets if t not in text and t not in extra)
+        # 追问句补全上下文：短句 + 指代词时，把上一轮用户话带上。
+        # 真实模型做的是同一件事（"那包裹丢了怎么赔" → 补成"物流 包裹 丢件 赔付"），
+        # 离线替身没有语义能力，至少要让词法通道看到上一轮的主题词。
+        if _looks_like_followup(text):
+            prev = _last_user_turn(prompt)
+            if prev and prev not in text:
+                extra.append(prev[:40])
         return " ".join([text, *extra]).strip()
 
     _PREFERRED_TOOL: dict[str, tuple[str, ...]] = {
@@ -212,6 +249,11 @@ class HeuristicChatClient:
         if passages:
             body = re.sub(r"^[^：]{0,40}：", "", passages[0], count=1)
             out.append("按平台规则，" + first_sentences(body, 2))
+            # 追问句（"过期的券能补吗"）往往命中的是总则而非具体条款，
+            # 只答第一条会把"能补发"这类关键结论漏掉，所以补一条次相关条款。
+            if len(passages) > 1 and len("".join(out)) < 120:
+                body2 = re.sub(r"^[^：]{0,40}：", "", passages[1], count=1)
+                out.append("另外，" + first_sentences(body2, 1))
         if not out:
             out.append(f"关于「{question[:24]}」，我已记录，会尽快核实后回复你。")
         return "".join(out)[:400]

@@ -272,6 +272,9 @@ class ServiceTools:
             config_name=args.get("config") or "full",
             filters=filters,
             domain_prior=domain_for(intent),
+            # 多轮里 plan 阶段的检索必须带上历史：追问句（"三天没更新了怎么办"）
+            # 本身没有领域信息，不带历史会一路漂到退款/改地址那些通用条款上。
+            history=ctx.services.get("history") or [],
         )
         return {
             "available": True,
