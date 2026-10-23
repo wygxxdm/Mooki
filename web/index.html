@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mooki · 售后 Agent 轨迹面板</title>
+<style>
+  :root {
+    --bg: #f6f6f3; --card: #ffffff; --line: #e4e4de; --ink: #1e1e1b;
+    --muted: #6f6f68; --hint: #9a9a92;
+    --blue: #185fa5; --blue-bg: #e6f1fb;
+    --teal: #0f6e56; --teal-bg: #e1f5ee;
+    --amber: #854f0b; --amber-bg: #faeeda;
+    --red: #a32d2d; --red-bg: #fcebeb;
+    --purple: #534ab7; --purple-bg: #eeedfe;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 13px/1.6 -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
+    height: 100vh; display: flex; flex-direction: column;
+  }
+  header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 10px 18px; background: var(--card); border-bottom: 1px solid var(--line);
+  }
+  header h1 { font-size: 14px; font-weight: 500; margin: 0; }
+  .pill {
+    font-size: 11px; padding: 2px 8px; border-radius: 999px;
+    background: var(--blue-bg); color: var(--blue); border: 1px solid #cfe2f7;
+  }
+  .pill.offline { background: var(--amber-bg); color: var(--amber); border-color: #f0d6a8; }
+  .spacer { flex: 1; }
+  main { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) 480px; min-height: 0; }
+  .chat { display: flex; flex-direction: column; min-height: 0; border-right: 1px solid var(--line); }
+  .log { flex: 1; overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+  .msg { max-width: 78%; padding: 9px 13px; border-radius: 12px; white-space: pre-wrap; }
+  .msg.user { align-self: flex-end; background: var(--blue); color: #fff; }
+  .msg.bot { align-self: flex-start; background: var(--card); border: 1px solid var(--line); }
+  .msg .meta { margin-top: 6px; font-size: 11px; color: var(--hint); display: flex; gap: 8px; flex-wrap: wrap; }
+  .composer { padding: 12px 18px; background: var(--card); border-top: 1px solid var(--line); }
+  .row { display: flex; gap: 8px; }
+  input[type=text] {
+    flex: 1; padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px;
+    font: inherit; background: var(--bg); color: var(--ink); outline: none;
+  }
+  input[type=text]:focus { border-color: var(--blue); background: #fff; }
+  button {
+    padding: 9px 16px; border: 0; border-radius: 8px; background: var(--blue); color: #fff;
+    font: inherit; cursor: pointer;
+  }
+  button:disabled { opacity: .45; cursor: default; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+  .chip {
+    font-size: 11px; padding: 3px 9px; border-radius: 999px; cursor: pointer;
+    background: var(--card); border: 1px solid var(--line); color: var(--muted);
+  }
+  .chip:hover { border-color: var(--blue); color: var(--blue); }
+  .trace { display: flex; flex-direction: column; min-height: 0; background: #fbfbf9; }
+  .trace-head {
+    padding: 10px 16px; border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted);
+  }
+  .trace-body { flex: 1; overflow-y: auto; padding: 10px 16px 24px; }
+  .ev { display: flex; gap: 10px; padding: 6px 0; border-bottom: 1px dashed #ecece6; }
+  .ev:last-child { border-bottom: 0; }
+  .ev .tag {
+    flex: 0 0 96px; font-family: var(--mono); font-size: 11px; color: var(--muted);
+    padding-top: 2px;
+  }
+  .ev .dot {
+    flex: 0 0 7px; height: 7px; border-radius: 50%; margin-top: 7px; background: var(--hint);
+  }
+  .ev .body { flex: 1; min-width: 0; }
+  .ev .title { font-size: 12px; font-weight: 500; }
+  .ev .detail {
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+    white-space: pre-wrap; word-break: break-all; margin-top: 2px;
+  }
+  .e-intent .dot { background: var(--purple); } .e-intent .tag { color: var(--purple); }
+  .e-tool .dot { background: var(--teal); } .e-tool .tag { color: var(--teal); }
+  .e-node .dot { background: var(--blue); } .e-node .tag { color: var(--blue); }
+  .e-warn .dot { background: var(--amber); } .e-warn .tag { color: var(--amber); }
+  .e-err .dot { background: var(--red); } .e-err .tag { color: var(--red); }
+  .empty { color: var(--hint); font-size: 12px; padding: 24px 0; text-align: center; }
+  button.mini {
+    padding: 3px 10px; font-size: 11px; border-radius: 6px;
+    background: var(--card); color: var(--muted); border: 1px solid var(--line);
+  }
+  button.mini:hover { border-color: var(--blue); color: var(--blue); }
+  .ev { cursor: pointer; }
+  .ev pre {
+    margin: 4px 0 0; padding: 6px 8px; background: #f4f4ef; border-radius: 6px;
+    font-family: var(--mono); font-size: 10px; color: var(--muted);
+    white-space: pre-wrap; word-break: break-all; max-height: 220px; overflow: auto;
+  }
+  .ev.open .title { color: var(--ink); }
+  .banner {
+    display: none; margin: 0; padding: 9px 18px; font-size: 12px; line-height: 1.6;
+    background: var(--red-bg); color: var(--red); border-bottom: 1px solid #f3c9c9;
+  }
+  .banner code {
+    font-family: var(--mono); background: #fff; padding: 1px 5px;
+    border-radius: 4px; border: 1px solid #f3c9c9;
+  }
+  .msg.bot.err { background: var(--red-bg); border-color: #f3c9c9; color: var(--red); }
+  @media (max-width: 1080px) { main { grid-template-columns: 1fr; } .trace { display: none; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Mooki · 售后 Agent</h1>
+  <span class="pill" id="engine">engine</span>
+  <span class="pill" id="index">index</span>
+  <span class="spacer"></span>
+  <span class="pill" id="latency">—</span>
+</header>
+
+<main>
+  <section class="chat">
+    <div class="banner" id="banner"></div>
+    <div class="log" id="log"></div>
+    <div class="composer">
+      <div class="chips" id="chips"></div>
+      <div class="row">
+        <input type="text" id="q" placeholder="输入售后问题，例如：SO20260512001 这个单子到哪了" autocomplete="off" />
+        <button id="send">发送</button>
+      </div>
+    </div>
+  </section>
+
+  <aside class="trace">
+    <div class="trace-head">
+      <span>Agent Trace</span>
+      <span class="spacer"></span>
+      <span id="traceId" style="font-family:var(--mono);font-size:11px"></span>
+      <button id="export" class="mini" title="导出当前 trace 为 JSON">导出</button>
+    </div>
+    <div class="trace-body" id="traceBody">
+      <div class="empty">发起一次对话后，这里会实时显示每个节点的决策</div>
+    </div>
+  </aside>
+</main>
+
+<script>
+const SAMPLES = [
+  "SO20260512001 这个单子到哪了",
+  "SO20261018006 我不想要了，能退款吗",
+  "SO20260518002 我想无理由退货",
+  "我要投诉，再不解决就去12315",
+  "优惠券为什么下单用不了",
+  "在吗"
+];
+
+const log = document.getElementById("log");
+const traceBody = document.getElementById("traceBody");
+const input = document.getElementById("q");
+const sendBtn = document.getElementById("send");
+let sessionId = "web-" + Math.random().toString(36).slice(2, 8);
+
+const chips = document.getElementById("chips");
+SAMPLES.forEach(text => {
+  const el = document.createElement("span");
+  el.className = "chip";
+  el.textContent = text;
+  el.onclick = () => { input.value = text; input.focus(); };
+  chips.appendChild(el);
+});
+
+function addMsg(role, text, meta) {
+  const div = document.createElement("div");
+  div.className = "msg " + role;
+  div.textContent = text;
+  if (meta) {
+    const m = document.createElement("div");
+    m.className = "meta";
+    m.textContent = meta;
+    div.appendChild(m);
+  }
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+  return div;
+}
+
+const TYPE_CLASS = {
+  intent: "e-intent", tool_call: "e-tool", tool_result: "e-tool", plan: "e-tool",
+  retrieval: "e-tool", handoff: "e-warn", clarify: "e-warn", error: "e-err",
+  observe: "e-node", memory_read: "e-node", memory_write: "e-node",
+  assembly: "e-node", run_start: "e-node", run_end: "e-node", usage: "e-node"
+};
+
+let currentEvents = [];
+let currentTraceId = "";
+
+function addEvent(ev) {
+  currentEvents.push(ev);
+  const row = document.createElement("div");
+  row.className = "ev " + (TYPE_CLASS[ev.type] || "e-node");
+  const tag = document.createElement("div");
+  tag.className = "tag";
+  tag.textContent = (ev.latency_ms != null ? ev.latency_ms + "ms" : ev.type);
+  const dot = document.createElement("div");
+  dot.className = "dot";
+  const body = document.createElement("div");
+  body.className = "body";
+  const title = document.createElement("div");
+  title.className = "title";
+  title.textContent = labelOf(ev);
+  body.appendChild(title);
+  const detail = detailOf(ev);
+  if (detail) {
+    const d = document.createElement("div");
+    d.className = "detail";
+    d.textContent = detail;
+    body.appendChild(d);
+  }
+  // 点击展开完整 JSON：排查时不用再去翻后端日志
+  row.onclick = () => {
+    const existing = row.querySelector("pre");
+    if (existing) { existing.remove(); row.classList.remove("open"); return; }
+    const pre = document.createElement("pre");
+    pre.textContent = JSON.stringify(ev, null, 2);
+    body.appendChild(pre);
+    row.classList.add("open");
+  };
+  row.append(tag, dot, body);
+  traceBody.appendChild(row);
+  traceBody.scrollTop = traceBody.scrollHeight;
+}
+
+document.getElementById("export").onclick = () => {
+  if (!currentEvents.length) return;
+  const payload = {
+    trace_id: currentTraceId,
+    exported_at: new Date().toISOString(),
+    engine: document.getElementById("engine").textContent,
+    events: currentEvents
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `trace-${currentTraceId || "unknown"}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+};
+
+function labelOf(ev) {
+  const p = ev.payload || {};
+  switch (ev.type) {
+    case "node_enter": return "▸ " + ev.node;
+    case "node_exit": return "✓ " + ev.node;
+    case "intent": return "意图 " + p.label + " / " + p.urgency + "  conf=" + p.confidence;
+    case "plan": return "规划工具 " + (p.tool || "—") + (p.iteration ? " (第" + (p.iteration + 1) + "轮)" : "");
+    case "tool_call": return "调用 " + p.tool;
+    case "tool_result": return (p.ok ? "返回 " : "失败 ") + p.tool + (p.from_cache ? " [缓存]" : "");
+    case "retrieval": return "检索 " + p.chunks + " 条 · " + p.config;
+    case "assembly": return "上下文拼装 " + Math.round((p.used || 0)) + "/" + p.budget + " tokens";
+    case "handoff": return "转人工 " + (p.ticket_id || "");
+    case "clarify": return "澄清追问 conf=" + p.confidence;
+    case "memory_read": return "记忆读取 轮次=" + p.turns;
+    case "memory_write": return "记忆写入 resolved=" + p.resolved;
+    case "run_start": return "开始处理";
+    case "run_end": return "处理完成";
+    case "usage": return "汇总 延迟 " + (p.latency_ms || 0) + "ms";
+    case "error": return "异常";
+    default: return ev.type;
+  }
+}
+
+function detailOf(ev) {
+  const p = ev.payload || {};
+  if (ev.type === "intent" && p.votes) {
+    return p.votes.map(v => `${v.source}:${v.label}(${v.score.toFixed(2)}×${v.weight})`).join("  ");
+  }
+  if (ev.type === "tool_request" || ev.type === "tool_call") return JSON.stringify(p.args || {});
+  if (ev.type === "tool_result") return (p.error || p.preview || "").slice(0, 240);
+  if (ev.type === "plan") return JSON.stringify(p.args || {}) + "  可选:" + JSON.stringify(p.remaining || []);
+  if (ev.type === "retrieval") return "rewrite=" + (p.effective_query || "") + "  degraded=" + JSON.stringify(p.degraded || []);
+  if (ev.type === "assembly" && p.sections) {
+    return Object.entries(p.sections).map(([k, v]) => `${k}:${v.tokens}/${v.quota}${v.truncated ? "✂" : ""}`).join("  ");
+  }
+  return "";
+}
+
+async function ask() {
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = "";
+  sendBtn.disabled = true;
+  addMsg("user", text);
+  traceBody.innerHTML = "";
+  currentEvents = [];
+  currentTraceId = "";
+  const bot = addMsg("bot", "…");
+  let gotReply = false;
+
+  try {
+    const resp = await fetch("/api/chat/stream", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text, session_id: sessionId, user_id: "u_1001" })
+    });
+    if (!resp.ok) {
+      throw new Error(`后端返回 HTTP ${resp.status}（地址 ${location.origin}）`);
+    }
+    const ctype = resp.headers.get("content-type") || "";
+    if (!ctype.includes("text/event-stream")) {
+      throw new Error(`当前地址 ${location.origin} 不是 Mooki 服务，响应内容不是事件流`);
+    }
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let first = true;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const parts = buffer.split("\n\n");
+      buffer = parts.pop();
+      for (const part of parts) {
+        if (!part.startsWith("data: ")) continue;
+        const ev = JSON.parse(part.slice(6));
+        if (ev.type === "accepted") {
+          currentTraceId = ev.trace_id;
+          document.getElementById("traceId").textContent = ev.trace_id;
+          document.getElementById("engine").textContent = ev.engine;
+          continue;
+        }
+        if (ev.type === "ping" || ev.type === "closed") continue;
+
+        // 服务端把事件放在 ev.event 里；同时兼容旧格式（事件字段平铺）
+        const e = ev.event || (ev.trace_id ? ev : null);
+        if (!e) continue;
+
+        if (first) { bot.textContent = ""; first = false; }
+        addEvent(e);
+        if (e.type === "run_end") {
+          if (e.payload && e.payload.reply) {
+            bot.textContent = e.payload.reply;
+            gotReply = true;
+          }
+          const p = e.payload || {};
+          const metaLine = document.createElement("div");
+          metaLine.className = "meta";
+          metaLine.textContent = `intent=${p.intent || "-"} · tools=${(p.tools || []).join(",") || "-"} · ${p.duration_ms}ms`;
+          bot.appendChild(metaLine);
+          document.getElementById("latency").textContent = p.duration_ms + "ms";
+        }
+      }
+    }
+  } catch (err) {
+    bot.classList.add("err");
+    bot.textContent = "请求失败：" + err.message;
+    gotReply = true;
+  }
+
+  if (!gotReply) {
+    bot.classList.add("err");
+    bot.textContent =
+      "没有收到后端回复。常见原因：① 页面不是从服务地址打开的（直接双击 HTML 文件或用了静态预览）；" +
+      "② 服务已停止。请用 http://127.0.0.1:8000 打开，或在项目目录执行 make serve。";
+  }
+
+  sendBtn.disabled = false;
+  input.focus();
+}
+
+sendBtn.onclick = ask;
+input.addEventListener("keydown", e => { if (e.key === "Enter") ask(); });
+
+fetch("/api/health").then(r => r.json()).then(d => {
+  document.getElementById("engine").textContent = d.engine + (d.llm_offline ? " · offline" : "");
+  document.getElementById("index").textContent = d.chunks + " chunks";
+}).catch(() => {
+  const banner = document.getElementById("banner");
+  banner.style.display = "block";
+  banner.innerHTML =
+    `⚠️ 当前地址 <code>${location.origin}</code> 没有连接到 Mooki 后端。` +
+    `请改用 <code>http://127.0.0.1:8000</code> 打开；若未启动，在项目目录执行 <code>make serve</code>。` +
+    `（直接双击 index.html 或使用静态文件预览都会出现这个提示，因为静态服务没有 /api 接口。）`;
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+{
+  "scenarios": [
+    {
+      "turns": 10,
+      "raw_tokens": 640,
+      "kept_tokens": 539,
+      "saving": 0.1578,
+      "window_turns": 16,
+      "summary_tokens": 27,
+      "summary_chars": 60,
+      "slot_order_id": "SO20260512001",
+      "order_id_in_context": true,
+      "assembler_used": 609,
+      "assembler_budget": 1200,
+      "assembler_util": 0.507,
+      "retrieval_dropped": 0
+    },
+    {
+      "turns": 20,
+      "raw_tokens": 1280,
+      "kept_tokens": 538,
+      "saving": 0.5797,
+      "window_turns": 16,
+      "summary_tokens": 26,
+      "summary_chars": 60,
+      "slot_order_id": "SO20260512001",
+      "order_id_in_context": true,
+      "assembler_used": 610,
+      "assembler_budget": 1200,
+      "assembler_util": 0.508,
+      "retrieval_dropped": 0
+    },
+    {
+      "turns": 40,
+      "raw_tokens": 2560,
+      "kept_tokens": 538,
+      "saving": 0.7898,
+      "window_turns": 16,
+      "summary_tokens": 26,
+      "summary_chars": 60,
+      "slot_order_id": "SO20260512001",
+      "order_id_in_context": true,
+      "assembler_used": 610,
+      "assembler_budget": 1200,
+      "assembler_util": 0.508,
+      "retrieval_dropped": 0
+    }
+  ],
+  "entity_retention": 1.0,
+  "avg_saving": 0.5091
+}

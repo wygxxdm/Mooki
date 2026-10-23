@@ -1,0 +1,828 @@
+{
+  "n": 40,
+  "accuracy": 0.95,
+  "macro_f1": 0.9496,
+  "abstain_rate": 0.025,
+  "accuracy_on_answered": 0.9744,
+  "answered": 39,
+  "per_class": {
+    "order_status": {
+      "support": 4,
+      "precision": 0.75,
+      "recall": 0.75,
+      "f1": 0.75
+    },
+    "refund": {
+      "support": 4,
+      "precision": 1.0,
+      "recall": 0.75,
+      "f1": 0.8571
+    },
+    "return_exchange": {
+      "support": 4,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "logistics": {
+      "support": 4,
+      "precision": 0.8,
+      "recall": 1.0,
+      "f1": 0.8889
+    },
+    "complaint": {
+      "support": 4,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "product_consult": {
+      "support": 4,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "invoice": {
+      "support": 4,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "promo": {
+      "support": 4,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "account": {
+      "support": 4,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "other": {
+      "support": 4,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    }
+  },
+  "confusion": {
+    "order_status": {
+      "order_status": 3,
+      "refund": 0,
+      "return_exchange": 0,
+      "logistics": 1,
+      "complaint": 0,
+      "product_consult": 0,
+      "invoice": 0,
+      "promo": 0,
+      "account": 0,
+      "other": 0
+    },
+    "refund": {
+      "order_status": 1,
+      "refund": 3,
+      "return_exchange": 0,
+      "logistics": 0,
+      "complaint": 0,
+      "product_consult": 0,
+      "invoice": 0,
+      "promo": 0,
+      "account": 0,
+      "other": 0
+    },
+    "return_exchange": {
+      "order_status": 0,
+      "refund": 0,
+      "return_exchange": 4,
+      "logistics": 0,
+      "complaint": 0,
+      "product_consult": 0,
+      "invoice": 0,
+      "promo": 0,
+      "account": 0,
+      "other": 0
+    },
+    "logistics": {
+      "order_status": 0,
+      "refund": 0,
+      "return_exchange": 0,
+      "logistics": 4,
+      "complaint": 0,
+      "product_consult": 0,
+      "invoice": 0,
+      "promo": 0,
+      "account": 0,
+      "other": 0
+    },
+    "complaint": {
+      "order_status": 0,
+      "refund": 0,
+      "return_exchange": 0,
+      "logistics": 0,
+      "complaint": 4,
+      "product_consult": 0,
+      "invoice": 0,
+      "promo": 0,
+      "account": 0,
+      "other": 0
+    },
+    "product_consult": {
+      "order_status": 0,
+      "refund": 0,
+      "return_exchange": 0,
+      "logistics": 0,
+      "complaint": 0,
+      "product_consult": 4,
+      "invoice": 0,
+      "promo": 0,
+      "account": 0,
+      "other": 0
+    },
+    "invoice": {
+      "order_status": 0,
+      "refund": 0,
+      "return_exchange": 0,
+      "logistics": 0,
+      "complaint": 0,
+      "product_consult": 0,
+      "invoice": 4,
+      "promo": 0,
+      "account": 0,
+      "other": 0
+    },
+    "promo": {
+      "order_status": 0,
+      "refund": 0,
+      "return_exchange": 0,
+      "logistics": 0,
+      "complaint": 0,
+      "product_consult": 0,
+      "invoice": 0,
+      "promo": 4,
+      "account": 0,
+      "other": 0
+    },
+    "account": {
+      "order_status": 0,
+      "refund": 0,
+      "return_exchange": 0,
+      "logistics": 0,
+      "complaint": 0,
+      "product_consult": 0,
+      "invoice": 0,
+      "promo": 0,
+      "account": 4,
+      "other": 0
+    },
+    "other": {
+      "order_status": 0,
+      "refund": 0,
+      "return_exchange": 0,
+      "logistics": 0,
+      "complaint": 0,
+      "product_consult": 0,
+      "invoice": 0,
+      "promo": 0,
+      "account": 0,
+      "other": 4
+    }
+  },
+  "errors": [
+    {
+      "query": "帮我查下订单到哪了",
+      "gold": "order_status",
+      "pred": "logistics",
+      "confidence": 0.468,
+      "margin": 0.1466,
+      "need_clarify": false,
+      "votes": [
+        "llm:order_status:0.90",
+        "dense:order_status:0.96",
+        "rule:logistics:0.72"
+      ]
+    },
+    {
+      "query": "取消订单以后钱退哪去了",
+      "gold": "refund",
+      "pred": "order_status",
+      "confidence": 0.442,
+      "margin": 0.1188,
+      "need_clarify": true,
+      "votes": [
+        "llm:refund:0.90",
+        "dense:refund:0.98",
+        "rule:order_status:0.68"
+      ]
+    }
+  ],
+  "details": [
+    {
+      "query": "帮我查下订单到哪了",
+      "gold": "order_status",
+      "pred": "logistics",
+      "confidence": 0.468,
+      "margin": 0.1466,
+      "need_clarify": false,
+      "votes": [
+        "llm:order_status:0.90",
+        "dense:order_status:0.96",
+        "rule:logistics:0.72"
+      ]
+    },
+    {
+      "query": "SO20260512001 现在什么状态",
+      "gold": "order_status",
+      "pred": "order_status",
+      "confidence": 0.9244,
+      "margin": 0.9244,
+      "need_clarify": false,
+      "votes": [
+        "llm:order_status:0.90",
+        "dense:order_status:0.99"
+      ]
+    },
+    {
+      "query": "昨天下单的怎么还没发货",
+      "gold": "order_status",
+      "pred": "order_status",
+      "confidence": 0.793,
+      "margin": 0.793,
+      "need_clarify": false,
+      "votes": [
+        "llm:order_status:0.90",
+        "dense:order_status:1.00",
+        "rule:order_status:0.72"
+      ]
+    },
+    {
+      "query": "我的单子显示已支付但没动静",
+      "gold": "order_status",
+      "pred": "order_status",
+      "confidence": 0.9143,
+      "margin": 0.9143,
+      "need_clarify": false,
+      "votes": [
+        "llm:order_status:0.90",
+        "dense:order_status:0.95"
+      ]
+    },
+    {
+      "query": "我要退款，东西不想要了",
+      "gold": "refund",
+      "pred": "refund",
+      "confidence": 0.767,
+      "margin": 0.767,
+      "need_clarify": false,
+      "votes": [
+        "llm:refund:0.90",
+        "dense:refund:1.00",
+        "rule:refund:0.68"
+      ]
+    },
+    {
+      "query": "退款三天了钱还没到",
+      "gold": "refund",
+      "pred": "refund",
+      "confidence": 0.7659,
+      "margin": 0.7659,
+      "need_clarify": false,
+      "votes": [
+        "llm:refund:0.90",
+        "dense:refund:0.99",
+        "rule:refund:0.68"
+      ]
+    },
+    {
+      "query": "取消订单以后钱退哪去了",
+      "gold": "refund",
+      "pred": "order_status",
+      "confidence": 0.442,
+      "margin": 0.1188,
+      "need_clarify": true,
+      "votes": [
+        "llm:refund:0.90",
+        "dense:refund:0.98",
+        "rule:order_status:0.68"
+      ]
+    },
+    {
+      "query": "这个订单能退我多少钱",
+      "gold": "refund",
+      "pred": "refund",
+      "confidence": 0.819,
+      "margin": 0.819,
+      "need_clarify": false,
+      "votes": [
+        "llm:refund:0.90",
+        "dense:refund:1.00",
+        "rule:refund:0.76"
+      ]
+    },
+    {
+      "query": "收到的东西质量有问题我要退货",
+      "gold": "return_exchange",
+      "pred": "return_exchange",
+      "confidence": 0.7663,
+      "margin": 0.7663,
+      "need_clarify": false,
+      "votes": [
+        "llm:return_exchange:0.90",
+        "dense:return_exchange:0.99",
+        "rule:return_exchange:0.68"
+      ]
+    },
+    {
+      "query": "尺码不合适想换大一码",
+      "gold": "return_exchange",
+      "pred": "return_exchange",
+      "confidence": 0.923,
+      "margin": 0.923,
+      "need_clarify": false,
+      "votes": [
+        "llm:return_exchange:0.90",
+        "dense:return_exchange:1.00",
+        "rule:return_exchange:0.92"
+      ]
+    },
+    {
+      "query": "七天无理由怎么操作",
+      "gold": "return_exchange",
+      "pred": "return_exchange",
+      "confidence": 0.8444,
+      "margin": 0.8444,
+      "need_clarify": false,
+      "votes": [
+        "llm:return_exchange:0.90",
+        "dense:return_exchange:0.99",
+        "rule:return_exchange:0.80"
+      ]
+    },
+    {
+      "query": "颜色发错了能换货吗",
+      "gold": "return_exchange",
+      "pred": "return_exchange",
+      "confidence": 0.7636,
+      "margin": 0.7636,
+      "need_clarify": false,
+      "votes": [
+        "llm:return_exchange:0.90",
+        "dense:return_exchange:0.97",
+        "rule:return_exchange:0.68"
+      ]
+    },
+    {
+      "query": "快递停在揽收三天了",
+      "gold": "logistics",
+      "pred": "logistics",
+      "confidence": 0.7548,
+      "margin": 0.7548,
+      "need_clarify": false,
+      "votes": [
+        "llm:logistics:0.90",
+        "dense:logistics:0.88",
+        "rule:logistics:0.68"
+      ]
+    },
+    {
+      "query": "什么时候能送到我着急用",
+      "gold": "logistics",
+      "pred": "logistics",
+      "confidence": 0.9286,
+      "margin": 0.9286,
+      "need_clarify": false,
+      "votes": [
+        "llm:logistics:0.90",
+        "dense:logistics:1.00"
+      ]
+    },
+    {
+      "query": "显示已签收但我没收到",
+      "gold": "logistics",
+      "pred": "logistics",
+      "confidence": 0.767,
+      "margin": 0.767,
+      "need_clarify": false,
+      "votes": [
+        "llm:logistics:0.90",
+        "dense:logistics:1.00",
+        "rule:logistics:0.68"
+      ]
+    },
+    {
+      "query": "发的是什么快递能改地址吗",
+      "gold": "logistics",
+      "pred": "logistics",
+      "confidence": 0.767,
+      "margin": 0.767,
+      "need_clarify": false,
+      "votes": [
+        "llm:logistics:0.90",
+        "dense:logistics:1.00",
+        "rule:logistics:0.68"
+      ]
+    },
+    {
+      "query": "我要投诉你们的服务态度",
+      "gold": "complaint",
+      "pred": "complaint",
+      "confidence": 0.7654,
+      "margin": 0.7654,
+      "need_clarify": false,
+      "votes": [
+        "llm:complaint:0.90",
+        "dense:complaint:0.98",
+        "rule:complaint:0.68"
+      ]
+    },
+    {
+      "query": "再不处理我就去12315",
+      "gold": "complaint",
+      "pred": "complaint",
+      "confidence": 0.8444,
+      "margin": 0.8444,
+      "need_clarify": false,
+      "votes": [
+        "llm:complaint:0.90",
+        "dense:complaint:0.99",
+        "rule:complaint:0.80"
+      ]
+    },
+    {
+      "query": "这是虚假宣传我要举报",
+      "gold": "complaint",
+      "pred": "complaint",
+      "confidence": 0.8833,
+      "margin": 0.8833,
+      "need_clarify": false,
+      "votes": [
+        "llm:complaint:0.90",
+        "dense:complaint:0.99",
+        "rule:complaint:0.86"
+      ]
+    },
+    {
+      "query": "连续三次都没解决我要找媒体",
+      "gold": "complaint",
+      "pred": "complaint",
+      "confidence": 0.9286,
+      "margin": 0.9286,
+      "need_clarify": false,
+      "votes": [
+        "llm:complaint:0.90",
+        "dense:complaint:1.00"
+      ]
+    },
+    {
+      "query": "这个耳机支持主动降噪吗",
+      "gold": "product_consult",
+      "pred": "product_consult",
+      "confidence": 0.9286,
+      "margin": 0.9286,
+      "need_clarify": false,
+      "votes": [
+        "llm:product_consult:0.90",
+        "dense:product_consult:1.00"
+      ]
+    },
+    {
+      "query": "保修期多久坏了怎么修",
+      "gold": "product_consult",
+      "pred": "product_consult",
+      "confidence": 0.7669,
+      "margin": 0.7669,
+      "need_clarify": false,
+      "votes": [
+        "llm:product_consult:0.90",
+        "dense:product_consult:1.00",
+        "rule:product_consult:0.68"
+      ]
+    },
+    {
+      "query": "这个材质会不会过敏",
+      "gold": "product_consult",
+      "pred": "product_consult",
+      "confidence": 0.7627,
+      "margin": 0.7627,
+      "need_clarify": false,
+      "votes": [
+        "llm:product_consult:0.90",
+        "dense:product_consult:0.96",
+        "rule:product_consult:0.68"
+      ]
+    },
+    {
+      "query": "两款有什么区别推荐哪个",
+      "gold": "product_consult",
+      "pred": "product_consult",
+      "confidence": 0.845,
+      "margin": 0.845,
+      "need_clarify": false,
+      "votes": [
+        "llm:product_consult:0.90",
+        "dense:product_consult:1.00",
+        "rule:product_consult:0.80"
+      ]
+    },
+    {
+      "query": "我要开发票怎么开",
+      "gold": "invoice",
+      "pred": "invoice",
+      "confidence": 0.767,
+      "margin": 0.767,
+      "need_clarify": false,
+      "votes": [
+        "llm:invoice:0.90",
+        "dense:invoice:1.00",
+        "rule:invoice:0.68"
+      ]
+    },
+    {
+      "query": "电子发票在哪里下载",
+      "gold": "invoice",
+      "pred": "invoice",
+      "confidence": 0.767,
+      "margin": 0.767,
+      "need_clarify": false,
+      "votes": [
+        "llm:invoice:0.90",
+        "dense:invoice:1.00",
+        "rule:invoice:0.68"
+      ]
+    },
+    {
+      "query": "发票抬头写错了能重开吗",
+      "gold": "invoice",
+      "pred": "invoice",
+      "confidence": 0.832,
+      "margin": 0.832,
+      "need_clarify": false,
+      "votes": [
+        "llm:invoice:0.90",
+        "dense:invoice:1.00",
+        "rule:invoice:0.78"
+      ]
+    },
+    {
+      "query": "能不能开增值税专用发票",
+      "gold": "invoice",
+      "pred": "invoice",
+      "confidence": 0.858,
+      "margin": 0.858,
+      "need_clarify": false,
+      "votes": [
+        "llm:invoice:0.90",
+        "dense:invoice:1.00",
+        "rule:invoice:0.82"
+      ]
+    },
+    {
+      "query": "优惠券为什么下单用不了",
+      "gold": "promo",
+      "pred": "promo",
+      "confidence": 0.793,
+      "margin": 0.793,
+      "need_clarify": false,
+      "votes": [
+        "llm:promo:0.90",
+        "dense:promo:1.00",
+        "rule:promo:0.72"
+      ]
+    },
+    {
+      "query": "这个能叠加满减吗",
+      "gold": "promo",
+      "pred": "promo",
+      "confidence": 0.7636,
+      "margin": 0.7636,
+      "need_clarify": false,
+      "votes": [
+        "llm:promo:0.90",
+        "dense:promo:0.97",
+        "rule:promo:0.68"
+      ]
+    },
+    {
+      "query": "刚买完就降价了能价保吗",
+      "gold": "promo",
+      "pred": "promo",
+      "confidence": 0.9263,
+      "margin": 0.9263,
+      "need_clarify": false,
+      "votes": [
+        "llm:promo:0.90",
+        "dense:promo:0.99"
+      ]
+    },
+    {
+      "query": "我的券过期了能补吗",
+      "gold": "promo",
+      "pred": "promo",
+      "confidence": 0.9286,
+      "margin": 0.9286,
+      "need_clarify": false,
+      "votes": [
+        "llm:promo:0.90",
+        "dense:promo:1.00"
+      ]
+    },
+    {
+      "query": "账号验证码收不到登不上",
+      "gold": "account",
+      "pred": "account",
+      "confidence": 0.7669,
+      "margin": 0.7669,
+      "need_clarify": false,
+      "votes": [
+        "llm:account:0.90",
+        "dense:account:1.00",
+        "rule:account:0.68"
+      ]
+    },
+    {
+      "query": "我要换绑手机号",
+      "gold": "account",
+      "pred": "account",
+      "confidence": 0.793,
+      "margin": 0.793,
+      "need_clarify": false,
+      "votes": [
+        "llm:account:0.90",
+        "dense:account:1.00",
+        "rule:account:0.72"
+      ]
+    },
+    {
+      "query": "账号好像被盗了订单不是我下的",
+      "gold": "account",
+      "pred": "account",
+      "confidence": 0.832,
+      "margin": 0.832,
+      "need_clarify": false,
+      "votes": [
+        "llm:account:0.90",
+        "dense:account:1.00",
+        "rule:account:0.78"
+      ]
+    },
+    {
+      "query": "实名认证一直失败",
+      "gold": "account",
+      "pred": "account",
+      "confidence": 0.767,
+      "margin": 0.767,
+      "need_clarify": false,
+      "votes": [
+        "llm:account:0.90",
+        "dense:account:1.00",
+        "rule:account:0.68"
+      ]
+    },
+    {
+      "query": "转人工客服",
+      "gold": "other",
+      "pred": "other",
+      "confidence": 0.923,
+      "margin": 0.923,
+      "need_clarify": false,
+      "votes": [
+        "llm:other:0.90",
+        "dense:other:1.00",
+        "rule:other:0.92"
+      ]
+    },
+    {
+      "query": "在吗问个事",
+      "gold": "other",
+      "pred": "other",
+      "confidence": 0.7586,
+      "margin": 0.7586,
+      "need_clarify": false,
+      "votes": [
+        "llm:other:0.87",
+        "dense:other:1.00",
+        "rule:other:0.68"
+      ]
+    },
+    {
+      "query": "你们几点上班",
+      "gold": "other",
+      "pred": "other",
+      "confidence": 0.9286,
+      "margin": 0.9286,
+      "need_clarify": false,
+      "votes": [
+        "llm:other:0.90",
+        "dense:other:1.00"
+      ]
+    },
+    {
+      "query": "这个怎么处理",
+      "gold": "other",
+      "pred": "other",
+      "confidence": 0.9286,
+      "margin": 0.9286,
+      "need_clarify": false,
+      "votes": [
+        "llm:other:0.90",
+        "dense:other:1.00"
+      ]
+    }
+  ],
+  "route_ablation": {
+    "rule_only": {
+      "accuracy": 0.775,
+      "macro_f1": 0.7855,
+      "abstain_rate": 0.225,
+      "accuracy_on_answered": 0.9355
+    },
+    "dense_only": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "abstain_rate": 0.0,
+      "accuracy_on_answered": 1.0
+    },
+    "llm_only": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "abstain_rate": 0.0,
+      "accuracy_on_answered": 1.0
+    },
+    "rule+dense": {
+      "accuracy": 0.95,
+      "macro_f1": 0.9496,
+      "abstain_rate": 0.0,
+      "accuracy_on_answered": 0.95
+    },
+    "fusion(三路)": {
+      "accuracy": 0.95,
+      "macro_f1": 0.9496,
+      "abstain_rate": 0.025,
+      "accuracy_on_answered": 0.9744
+    },
+    "_complementarity": {
+      "dense_only vs rule_only": {
+        "两者都对": 31,
+        "仅dense_only对": 9,
+        "仅rule_only对": 0,
+        "两者都错": 0,
+        "并集正确数": 40,
+        "互补率": 0.225
+      },
+      "dense_only vs llm_only": {
+        "两者都对": 40,
+        "仅dense_only对": 0,
+        "仅llm_only对": 0,
+        "两者都错": 0,
+        "并集正确数": 40,
+        "互补率": 0.0
+      },
+      "rule_only vs llm_only": {
+        "两者都对": 31,
+        "仅rule_only对": 0,
+        "仅llm_only对": 9,
+        "两者都错": 0,
+        "并集正确数": 40,
+        "互补率": 0.225
+      }
+    }
+  },
+  "holdout": {
+    "n": 50,
+    "dev_n": 30,
+    "test_n": 20,
+    "routes": {
+      "llm": {
+        "dev": 0.2667,
+        "test": 0.3
+      },
+      "dense": {
+        "dev": 0.2,
+        "test": 0.35
+      },
+      "rule": {
+        "dev": 0.8,
+        "test": 0.85
+      }
+    },
+    "fusion_default": {
+      "weights": {
+        "llm": 0.55,
+        "dense": 0.25,
+        "rule": 0.2
+      },
+      "dev": 0.3667,
+      "test": 0.35
+    },
+    "fusion_tuned": {
+      "weights": {
+        "llm": 0.25,
+        "dense": 0.1,
+        "rule": 0.65
+      },
+      "dev": 0.8,
+      "test": 0.85
+    }
+  }
+}

@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mooki"
+version = "0.1.0"
+description = "受控式电商售后智能客服 Agent：固定拓扑编排 + 混合检索 + 三层记忆 + 幂等补偿账本"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.110",
+    "uvicorn>=0.27",
+    "pydantic>=2.6",
+    "pydantic-settings>=2.2",
+    "httpx>=0.27",
+    "numpy>=1.26",
+]
+
+[project.optional-dependencies]
+graph = ["langgraph>=0.2"]
+dev = ["pytest>=8"]
+
+[tool.setuptools]
+packages = ["mooki"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"

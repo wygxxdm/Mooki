@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-and-eval:
+    name: 单测 + 离线评测
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: 安装依赖
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: 单元测试
+        run: python -m unittest discover -s tests -t . -v
+
+      - name: 重建知识库索引
+        run: python -m scripts.build_index
+
+      - name: 离线评测（检索 / 意图 / 端到端 / 规模敏感性）
+        # 评测脚本内部强制离线模式并隔离账本，不需要任何 API Key
+        run: python -m scripts.run_eval all
+
+      - name: 基准（记忆压缩 + 延迟分解）
+        run: python -m scripts.bench all
+
+      - name: 向量后端对比
+        run: python -m scripts.embedder_ablation
+
+      - name: 汇总报告
+        if: always()
+        run: |
+          {
+            echo "## 单元测试"
+            echo '```'
+            python -m unittest discover -s tests -t . 2>&1 | tail -3
+            echo '```'
+            echo
+            cat eval_out/retrieval_ablation.md 2>/dev/null || echo "（无检索报告）"
+            echo
+            cat eval_out/intent_eval.md 2>/dev/null || echo "（无意图报告）"
+            echo
+            cat eval_out/dialogue_eval.md 2>/dev/null || echo "（无端到端报告）"
+            echo
+            cat eval_out/scale_eval.md 2>/dev/null || echo "（无规模实验报告）"
+            echo
+            cat eval_out/memory_bench.md 2>/dev/null || echo "（无记忆报告）"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: eval-reports
+          path: eval_out/
+          retention-days: 30

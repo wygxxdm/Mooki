@@ -1,0 +1,259 @@
+{
+  "n": 12,
+  "mean_score": 4.083,
+  "median_score": 4.0,
+  "pass_rate": 0.6667,
+  "keyword_pass_rate": 0.9167,
+  "judge_keyword_conflict": [
+    "d01"
+  ],
+  "degraded_rate": 0.0,
+  "p95_latency_ms": 13,
+  "details": [
+    {
+      "id": "d01",
+      "message": "SO20260512001 这个单子到哪了",
+      "reply": "已为你核实：物流：顺丰速运 SF1234567890，最新 派送中，更新于 2026-05-20 09:12:00。按平台规则，物流轨迹超过 72 小时无更新，视为异常件。处理顺序：先在物流详情页点击\"催件\"，承运商会在 24 小时内回访；",
+      "score": 4,
+      "judge_reason": "参考要点覆盖率 0.50",
+      "must_have": [
+        "待收货",
+        "派送中"
+      ],
+      "must_have_hit": [
+        "派送中"
+      ],
+      "keyword_pass": false,
+      "intent": "logistics",
+      "tools": [
+        "logistics.track"
+      ],
+      "degraded": false,
+      "latency_ms": 8
+    },
+    {
+      "id": "d02",
+      "message": "SO20261018006 我不想要了，能退款吗",
+      "reply": "已为你核实：退款判断：可退，可退金额 139.0 元，阻断项 无，签收至今 2 天，退款单号 RFE0E75A4E74，当前状态 refund_pending；订单 SO20261018006：状态 已完成，商品 便携榨汁杯 400ml，实付 139.0 元，下单 2026-10-18 09:12:00，签收 2026-10-20 15:41:00。按平台规则，退款进度分五个节点：申请提交、商家审核、平台审核、退款中、退款完成。用户可在订单详情页的售后记录中查看当前节点与各节点时间。",
+      "score": 3,
+      "judge_reason": "参考要点覆盖率 0.30",
+      "must_have": [
+        "139",
+        "7"
+      ],
+      "must_have_hit": [
+        "139",
+        "7"
+      ],
+      "keyword_pass": true,
+      "intent": "refund",
+      "tools": [
+        "order.query",
+        "refund.apply",
+        "kb.search"
+      ],
+      "degraded": false,
+      "latency_ms": 13
+    },
+    {
+      "id": "d03",
+      "message": "SO20260518002 我想无理由退货",
+      "reply": "已为你核实：退货单未创建，原因 exceed_no_reason_window:154d，签收至今 154 天；如存在质量问题，可按质量问题申请退换，不受 7 天限制。按平台规则，自签收之日起 7 个自然日内可申请无理由退货，商品需保持完好、不影响二次销售，配件、赠品、包装、说明书齐全。定制类、生鲜易腐类、已拆封的音像制品与软件、贴身衣物等不适用无理由退货。",
+      "score": 3,
+      "judge_reason": "参考要点覆盖率 0.30",
+      "must_have": [
+        "7"
+      ],
+      "must_have_hit": [
+        "7"
+      ],
+      "keyword_pass": true,
+      "intent": "return_exchange",
+      "tools": [
+        "order.query",
+        "return.create",
+        "kb.search"
+      ],
+      "degraded": false,
+      "latency_ms": 7
+    },
+    {
+      "id": "d04",
+      "message": "退款一般多久能到账",
+      "reply": "按平台规则，订单退款成功后，款项按原支付渠道退回。微信、支付宝余额类渠道一般在 1 个工作日内到账；",
+      "score": 3,
+      "judge_reason": "参考要点覆盖率 0.33",
+      "must_have": [
+        "工作日"
+      ],
+      "must_have_hit": [
+        "工作日"
+      ],
+      "keyword_pass": true,
+      "intent": "refund",
+      "tools": [
+        "kb.search"
+      ],
+      "degraded": false,
+      "latency_ms": 7
+    },
+    {
+      "id": "d05",
+      "message": "你们的快递一直不更新，三天没动静了",
+      "reply": "按平台规则，物流轨迹超过 72 小时无更新，视为异常件。处理顺序：先在物流详情页点击\"催件\"，承运商会在 24 小时内回访；",
+      "score": 4,
+      "judge_reason": "参考要点覆盖率 0.53",
+      "must_have": [
+        "72"
+      ],
+      "must_have_hit": [
+        "72"
+      ],
+      "keyword_pass": true,
+      "intent": "logistics",
+      "tools": [
+        "kb.search"
+      ],
+      "degraded": false,
+      "latency_ms": 6
+    },
+    {
+      "id": "d06",
+      "message": "发票抬头写错了，能重开吗",
+      "reply": "按平台规则，发票抬头、税号填错可申请换开，需先对原发票做红冲（冲红）处理，红冲完成后再重新开具，整体耗时 3 至 5 个工作日。已用于报销或已认证抵扣的专票无法直接红冲，需提供税务机关开具的红字信息表。",
+      "score": 5,
+      "judge_reason": "参考要点覆盖率 0.75",
+      "must_have": [
+        "红冲"
+      ],
+      "must_have_hit": [
+        "红冲"
+      ],
+      "keyword_pass": true,
+      "intent": "invoice",
+      "tools": [
+        "kb.search"
+      ],
+      "degraded": false,
+      "latency_ms": 6
+    },
+    {
+      "id": "d07",
+      "message": "刚买完就降价了，能退差价吗",
+      "reply": "按平台规则，自签收之日起 15 个自然日内，若同一商品在同一店铺出现降价（不含优惠券、红包导致的实付差异），可申请价保，退还差价至原支付渠道。价保不适用于秒杀、限时特价、清仓、以及使用了大额券的订单。",
+      "score": 5,
+      "judge_reason": "参考要点覆盖率 0.82",
+      "must_have": [
+        "15"
+      ],
+      "must_have_hit": [
+        "15"
+      ],
+      "keyword_pass": true,
+      "intent": "promo",
+      "tools": [
+        "kb.search"
+      ],
+      "degraded": false,
+      "latency_ms": 6
+    },
+    {
+      "id": "d08",
+      "message": "手机进水了还能保修吗",
+      "reply": "按平台规则，进液、摔碰、私自拆机、非授权维修、外力导致的屏幕碎裂、使用非原装配件造成的损坏，均属人为损坏，不在免费保修范围内。是否人为由品牌售后网点检测判定，检测报告为准。",
+      "score": 5,
+      "judge_reason": "参考要点覆盖率 0.64",
+      "must_have": [
+        "人为"
+      ],
+      "must_have_hit": [
+        "人为"
+      ],
+      "keyword_pass": true,
+      "intent": "product_consult",
+      "tools": [
+        "kb.search"
+      ],
+      "degraded": false,
+      "latency_ms": 7
+    },
+    {
+      "id": "d09",
+      "message": "再不给我解决我就去12315投诉",
+      "reply": "已为你转接人工客服并创建工单 TKFD9180B480，预计 2 小时内与你联系。你的问题我已完整记录，无需重复描述。",
+      "score": 4,
+      "judge_reason": "参考要点覆盖率 0.43",
+      "must_have": [
+        "工单"
+      ],
+      "must_have_hit": [
+        "工单"
+      ],
+      "keyword_pass": true,
+      "intent": "complaint",
+      "tools": [],
+      "degraded": false,
+      "latency_ms": 6
+    },
+    {
+      "id": "d10",
+      "message": "优惠券为什么下单用不了",
+      "reply": "按平台规则，优惠券需满足使用门槛（满减金额）、适用品类、有效期限三个条件才能抵扣。券在提交订单时自动匹配最优组合，也可在订单页手动切换。",
+      "score": 3,
+      "judge_reason": "参考要点覆盖率 0.38",
+      "must_have": [
+        "门槛"
+      ],
+      "must_have_hit": [
+        "门槛"
+      ],
+      "keyword_pass": true,
+      "intent": "promo",
+      "tools": [
+        "kb.search"
+      ],
+      "degraded": false,
+      "latency_ms": 6
+    },
+    {
+      "id": "d11",
+      "message": "怎么注销账号",
+      "reply": "按平台规则，账号注销需满足：无未完成订单、无进行中的售后、无余额与未使用券、无未结清的分期。注销申请提交后有 7 天冷静期，期间登录即可撤销。",
+      "score": 5,
+      "judge_reason": "参考要点覆盖率 0.70",
+      "must_have": [
+        "冷静期"
+      ],
+      "must_have_hit": [
+        "冷静期"
+      ],
+      "keyword_pass": true,
+      "intent": "account",
+      "tools": [
+        "kb.search"
+      ],
+      "degraded": false,
+      "latency_ms": 6
+    },
+    {
+      "id": "d12",
+      "message": "尺码买小了想换大一号",
+      "reply": "按平台规则，换货需先在订单页提交换货申请并选择换货原因与目标规格，商家同意后按指引发回商品。商家签收验收通过后 48 小时内发出新商品，换货全程一般在 7 至 10 个自然日。",
+      "score": 5,
+      "judge_reason": "参考要点覆盖率 0.84",
+      "must_have": [
+        "换货"
+      ],
+      "must_have_hit": [
+        "换货"
+      ],
+      "keyword_pass": true,
+      "intent": "return_exchange",
+      "tools": [
+        "kb.search"
+      ],
+      "degraded": false,
+      "latency_ms": 6
+    }
+  ]
+}

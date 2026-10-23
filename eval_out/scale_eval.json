@@ -1,0 +1,91 @@
+{
+  "base_chunks": 39,
+  "variant_pool": 468,
+  "queries": 40,
+  "sizes": [
+    39,
+    139,
+    239,
+    439
+  ],
+  "results": {
+    "direct": {
+      "39": {
+        "chunks": 39,
+        "recall@5": 0.875,
+        "ndcg@5": 0.8131,
+        "empty_rate": 0.0
+      },
+      "139": {
+        "chunks": 139,
+        "recall@5": 0.9,
+        "ndcg@5": 0.8146,
+        "empty_rate": 0.0
+      },
+      "239": {
+        "chunks": 239,
+        "recall@5": 0.875,
+        "ndcg@5": 0.8146,
+        "empty_rate": 0.0
+      },
+      "439": {
+        "chunks": 439,
+        "recall@5": 0.85,
+        "ndcg@5": 0.8131,
+        "empty_rate": 0.0
+      }
+    },
+    "bm25": {
+      "39": {
+        "chunks": 39,
+        "recall@5": 0.9,
+        "ndcg@5": 0.821,
+        "empty_rate": 0.025
+      },
+      "139": {
+        "chunks": 139,
+        "recall@5": 0.9,
+        "ndcg@5": 0.8129,
+        "empty_rate": 0.025
+      },
+      "239": {
+        "chunks": 239,
+        "recall@5": 0.9,
+        "ndcg@5": 0.8096,
+        "empty_rate": 0.025
+      },
+      "439": {
+        "chunks": 439,
+        "recall@5": 0.9,
+        "ndcg@5": 0.8079,
+        "empty_rate": 0.025
+      }
+    },
+    "full": {
+      "39": {
+        "chunks": 39,
+        "recall@5": 0.95,
+        "ndcg@5": 0.8821,
+        "empty_rate": 0.0
+      },
+      "139": {
+        "chunks": 139,
+        "recall@5": 0.875,
+        "ndcg@5": 0.8289,
+        "empty_rate": 0.0
+      },
+      "239": {
+        "chunks": 239,
+        "recall@5": 0.9,
+        "ndcg@5": 0.8539,
+        "empty_rate": 0.0
+      },
+      "439": {
+        "chunks": 439,
+        "recall@5": 0.9,
+        "ndcg@5": 0.8631,
+        "empty_rate": 0.0
+      }
+    }
+  }
+}

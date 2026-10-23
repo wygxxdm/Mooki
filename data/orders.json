@@ -1,0 +1,143 @@
+{
+  "SO20260512001": {
+    "order_id": "SO20260512001",
+    "user_id": "u_1001",
+    "status": "shipped",
+    "status_zh": "待收货",
+    "sku": "无线降噪耳机 Pro",
+    "sku_id": "SKU-8821",
+    "amount": 299.0,
+    "paid_amount": 269.0,
+    "created_at": "2026-05-12 10:21:03",
+    "paid_at": "2026-05-12 10:23:41",
+    "shipped_at": "2026-05-13 08:05:12",
+    "delivered_at": null,
+    "refundable": true,
+    "invoice": {"status": "not_requested"},
+    "logistics": {
+      "carrier": "顺丰速运",
+      "tracking_no": "SF1234567890",
+      "latest": "派送中",
+      "updated_at": "2026-05-20 09:12:00",
+      "events": [
+        {"time": "2026-05-13 08:05", "desc": "商家已发货"},
+        {"time": "2026-05-14 02:31", "desc": "到达杭州转运中心"},
+        {"time": "2026-05-20 09:12", "desc": "派送中，快递员 王师傅 138****2211"}
+      ]
+    }
+  },
+  "SO20260518002": {
+    "order_id": "SO20260518002",
+    "user_id": "u_1001",
+    "status": "delivered",
+    "status_zh": "已完成",
+    "sku": "智能手表 S2",
+    "sku_id": "SKU-9013",
+    "amount": 1299.0,
+    "paid_amount": 1299.0,
+    "created_at": "2026-05-18 19:02:11",
+    "paid_at": "2026-05-18 19:02:55",
+    "shipped_at": "2026-05-19 09:00:00",
+    "delivered_at": "2026-05-21 14:33:20",
+    "refundable": true,
+    "invoice": {"status": "issued", "type": "electronic"},
+    "logistics": {
+      "carrier": "京东物流",
+      "tracking_no": "JD9988776655",
+      "latest": "已签收",
+      "updated_at": "2026-05-21 14:33:20",
+      "events": [
+        {"time": "2026-05-19 09:00", "desc": "商家已发货"},
+        {"time": "2026-05-21 09:40", "desc": "派送中"},
+        {"time": "2026-05-21 14:33", "desc": "已签收，签收人：本人"}
+      ]
+    }
+  },
+  "SO20260520003": {
+    "order_id": "SO20260520003",
+    "user_id": "u_1001",
+    "status": "paid",
+    "status_zh": "待发货",
+    "sku": "机械键盘 K8",
+    "sku_id": "SKU-7742",
+    "amount": 459.0,
+    "paid_amount": 409.0,
+    "created_at": "2026-05-20 11:15:00",
+    "paid_at": "2026-05-20 11:16:02",
+    "shipped_at": null,
+    "delivered_at": null,
+    "refundable": true,
+    "invoice": {"status": "not_requested"},
+    "logistics": null
+  },
+  "SO20260522004": {
+    "order_id": "SO20260522004",
+    "user_id": "u_1002",
+    "status": "unpaid",
+    "status_zh": "待付款",
+    "sku": "空气炸锅 5L",
+    "sku_id": "SKU-5521",
+    "amount": 329.0,
+    "paid_amount": 0.0,
+    "created_at": "2026-05-22 08:00:00",
+    "paid_at": null,
+    "shipped_at": null,
+    "delivered_at": null,
+    "refundable": false,
+    "invoice": {"status": "not_requested"},
+    "logistics": null
+  },
+  "SO20260510005": {
+    "order_id": "SO20260510005",
+    "user_id": "u_1001",
+    "status": "delivered",
+    "status_zh": "已完成",
+    "sku": "儿童绘本套装（20 册）",
+    "sku_id": "SKU-3012",
+    "amount": 88.0,
+    "paid_amount": 78.0,
+    "created_at": "2026-05-10 16:40:00",
+    "paid_at": "2026-05-10 16:41:12",
+    "shipped_at": "2026-05-11 10:00:00",
+    "delivered_at": "2026-05-13 18:20:00",
+    "refundable": false,
+    "invoice": {"status": "issued", "type": "electronic"},
+    "logistics": {
+      "carrier": "中通快递",
+      "tracking_no": "ZT5566778899",
+      "latest": "已签收",
+      "updated_at": "2026-05-13 18:20:00",
+      "events": [
+        {"time": "2026-05-11 10:00", "desc": "商家已发货"},
+        {"time": "2026-05-13 18:20", "desc": "已签收，签收人：门卫"}
+      ]
+    }
+  },
+  "SO20261018006": {
+    "order_id": "SO20261018006",
+    "user_id": "u_1001",
+    "status": "delivered",
+    "status_zh": "已完成",
+    "sku": "便携榨汁杯 400ml",
+    "sku_id": "SKU-6610",
+    "amount": 159.0,
+    "paid_amount": 139.0,
+    "created_at": "2026-10-18 09:12:00",
+    "paid_at": "2026-10-18 09:13:30",
+    "shipped_at": "2026-10-18 20:00:00",
+    "delivered_at": "2026-10-20 15:41:00",
+    "refundable": true,
+    "invoice": {"status": "not_requested"},
+    "logistics": {
+      "carrier": "圆通速递",
+      "tracking_no": "YT2233445566",
+      "latest": "已签收",
+      "updated_at": "2026-10-20 15:41:00",
+      "events": [
+        {"time": "2026-10-18 20:00", "desc": "商家已发货"},
+        {"time": "2026-10-20 08:30", "desc": "派送中"},
+        {"time": "2026-10-20 15:41", "desc": "已签收，签收人：本人"}
+      ]
+    }
+  }
+}
