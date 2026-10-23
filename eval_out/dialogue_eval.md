@@ -4,12 +4,12 @@
 - 通过率（≥4 分）: **45.83%**
 - 关键词命中率（确定性下界）: 66.67%
 - Judge 与关键词冲突条目: ['d01']
-- 降级率: 0.00%，P95 延迟 21 ms
+- 降级率: 0.00%，P95 延迟 19 ms
 
 | # | 问题 | 分 | 意图 | 工具 | 关键词 |
 |---|---|---|---|---|---|
 | d01 | SO20260512001 这个单子到哪了 | 4 | logistics | logistics.track | ✗ |
-| d02 | SO20261018006 我不想要了，能退款吗 | 2 | refund | order.query,refund.apply,kb.search | ✓ |
+| d02 | SO20261018006 我不想要了，能退款吗 | 2 | refund | order.query,refund.apply,kb.search | ✗ |
 | d03 | SO20260518002 我想无理由退货 | 3 | return_exchange | order.query,return.create,kb.search | ✓ |
 | d04 | 退款一般多久能到账 | 3 | refund | kb.search | ✓ |
 | d05 | 你们的快递一直不更新，三天没动静了 | 3 | logistics | kb.search | ✓ |
@@ -31,4 +31,4 @@
 | d21 | 退货运费险能赔多少 | 4 | return_exchange | kb.search | ✓ |
 | d22 | 发票能不能只开商品不含运费 | 1 | logistics | - | ✗ |
 | d23 | 积分退款之后会退回吗 | 4 | refund | kb.search | ✓ |
-| d24 | 我要投诉并且要求赔偿 | 1 | complaint | - | ✗ |
+| d24 | 我要投诉并且要求赔偿 | 1 | complaint | - | ✓ |

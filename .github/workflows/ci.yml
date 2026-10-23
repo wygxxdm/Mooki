@@ -44,6 +44,10 @@ jobs:
       - name: 向量后端对比
         run: python -m scripts.embedder_ablation
 
+      - name: 幂等并发压测
+        # 断言 SQLite 后端在 16 并发下只产生 1 笔退款；跑不起来就直接失败
+        run: python -m scripts.concurrency_check --workers 8
+
       - name: 汇总报告
         if: always()
         run: |
@@ -62,6 +66,14 @@ jobs:
             cat eval_out/scale_eval.md 2>/dev/null || echo "（无规模实验报告）"
             echo
             cat eval_out/memory_bench.md 2>/dev/null || echo "（无记忆报告）"
+            echo
+            cat eval_out/multiturn_eval.md 2>/dev/null || echo "（无多轮报告）"
+            echo
+            cat eval_out/concurrency.md 2>/dev/null || echo "（无并发报告）"
+            echo
+            cat eval_out/multiturn_eval.md 2>/dev/null || echo "（无多轮报告）"
+            echo
+            cat eval_out/concurrency.md 2>/dev/null || echo "（无并发报告）"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - uses: actions/upload-artifact@v4

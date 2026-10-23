@@ -2,10 +2,10 @@
 
 | 账本后端 | 并发方式 | 成功创建 | 命中幂等 | 退款单号数 | 是否重复退款 | 耗时 |
 |---|---|---|---|---|---|---|
-| sqlite | threads | 1 | 15 | 1 | 否 | 106 ms |
-| sqlite | processes | 1 | 15 | 1 | 否 | 3530 ms |
+| sqlite | threads | 1 | 15 | 1 | 否 | 108 ms |
+| sqlite | processes | 1 | 15 | 1 | 否 | 3200 ms |
 | jsonl | threads | 16 | 0 | 16 | **是** | 177 ms |
-| jsonl | processes | 9 | 7 | 9 | **是** | 3438 ms |
+| jsonl | processes | 14 | 2 | 14 | **是** | 3228 ms |
 
 - SQLite 后端（线程 + 进程）：全部通过
 - jsonl 后端跨进程：复现出重复退款（预期）

@@ -62,7 +62,7 @@
       "mrr": 0.6193,
       "ndcg@5": 0.6747,
       "empty_rate": 0.0,
-      "avg_latency_ms": 0.4,
+      "avg_latency_ms": 0.3,
       "splits": {
         "dev": {
           "n": 92,
@@ -110,7 +110,7 @@
       "mrr": 0.6625,
       "ndcg@5": 0.712,
       "empty_rate": 0.0,
-      "avg_latency_ms": 0.5,
+      "avg_latency_ms": 0.6,
       "splits": {
         "dev": {
           "n": 92,

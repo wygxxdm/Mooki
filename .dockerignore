@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.git/
+.mooki_index/
+data/ledger.db*
+data/ledger.jsonl
+data/tickets.jsonl
+eval_out/
+docs/
+.env
+.DS_Store

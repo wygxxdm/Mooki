@@ -248,12 +248,15 @@ class HeuristicChatClient:
             out.append("已为你核实：" + first_sentences(facts, 2).rstrip("；。") + "。")
         if passages:
             body = re.sub(r"^[^：]{0,40}：", "", passages[0], count=1)
-            out.append("按平台规则，" + first_sentences(body, 2))
-            # 追问句（"过期的券能补吗"）往往命中的是总则而非具体条款，
-            # 只答第一条会把"能补发"这类关键结论漏掉，所以补一条次相关条款。
-            if len(passages) > 1 and len("".join(out)) < 120:
-                body2 = re.sub(r"^[^：]{0,40}：", "", passages[1], count=1)
-                out.append("另外，" + first_sentences(body2, 1))
+            # 特例条款不进兜底答复：境内订单问"能不能退"，召回排第一的可能是
+            # "跨境订单退款"（词面全是"退款"），拼上去就会出现"扣除国际运费与关税"。
+            # 这类条款只适合在明确问跨境的场景由模型自行取用。
+            edge = any(k in passages[0].split("：", 1)[0] for k in ("跨境", "海外", "国际"))
+            if not (facts and edge):
+                out.append("按平台规则，" + first_sentences(body, 2))
+                if len(passages) > 1 and not facts and len("".join(out)) < 120:
+                    body2 = re.sub(r"^[^：]{0,40}：", "", passages[1], count=1)
+                    out.append("另外，" + first_sentences(body2, 1))
         if not out:
             out.append(f"关于「{question[:24]}」，我已记录，会尽快核实后回复你。")
         return "".join(out)[:400]
@@ -302,6 +305,14 @@ class LLMService:
         self.calls = 0
         self.prompt_tokens = 0
         self.completion_tokens = 0
+
+    def usage(self) -> dict[str, int]:
+        """累计用量。token 为估算值（离线按字符长度换算），用于量级与成本估算。"""
+        return {
+            "calls": self.calls,
+            "prompt_tokens": self.prompt_tokens,
+            "completion_tokens": self.completion_tokens,
+        }
 
     def _run(self, task: str, system: str, prompt: str, temperature: float = 0.0) -> str:
         messages = [

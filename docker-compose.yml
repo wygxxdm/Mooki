@@ -1,0 +1,34 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      # 想接真模型：把这三个填上并把 OFFLINE 关掉（或改用 .env 挂载）
+      MOOKI_LLM_OFFLINE: ${MOOKI_LLM_OFFLINE:-true}
+      MOOKI_LLM_BASE_URL: ${MOOKI_LLM_BASE_URL:-}
+      MOOKI_LLM_API_KEY: ${MOOKI_LLM_API_KEY:-}
+      MOOKI_LLM_MODEL: ${MOOKI_LLM_MODEL:-qwen-plus}
+      # 多副本时账本必须落共享存储，否则每个副本各算各的
+      MOOKI_LEDGER_FILE: /app/var/ledger.db
+      MOOKI_REDIS_URL: redis://redis:6379/0
+    volumes:
+      - ledger:/app/var
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  ledger:
+  redis:
