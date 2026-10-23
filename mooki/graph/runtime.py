@@ -253,6 +253,16 @@ class AgentRuntime:
             if missing and tool != "kb.search" and "kb.search" in remaining:
                 tool, args = "kb.search", {"query": state["message"][:120]}
 
+        # 副作用幂等：账本里已经落过账的动作不在规划层重放。
+        # 多轮里用户追问"钱多久到账"，意图仍是 refund，若不拦会再规划一次 refund.apply；
+        # 账本幂等键能兜住不重复扣钱，但白跑一次写操作、答复也会退化成重复播报上次结论。
+        skip_reason = self._side_effect_done(tool, args, state["message"])
+        if skip_reason and tool != "kb.search" and "kb.search" in remaining:
+            self.trace.emit(
+                state["trace_id"], "plan_skip", "plan", {"tool": tool, "reason": skip_reason}
+            )
+            tool, args = "kb.search", {"query": state["message"][:120]}
+
         self.trace.emit(
             state["trace_id"],
             "plan",
@@ -260,6 +270,21 @@ class AgentRuntime:
             {"tool": tool, "args": args, "remaining": remaining, "iteration": state.get("iterations", 0)},
         )
         return {"plan": {"tool": tool, "args": args}, "remaining_tools": remaining}
+
+    def _side_effect_done(self, tool: str, args: dict, message: str) -> str:
+        """写操作是否已在账本中生效。返回非空字符串表示应跳过，值即跳过原因。"""
+        order_id = str(args.get("order_id") or "")
+        if not order_id:
+            return ""
+        # 用户明确要求"再退一次/重新退"，交给账本幂等键处理，不做规划层拦截
+        if any(k in message for k in ("再退", "重新退", "再申请", "重新申请")):
+            return ""
+        state = self.services.ledger.status(order_id)
+        if tool == "refund.apply" and state in ("refund_pending", "refunded"):
+            return f"ledger_state={state}"
+        if tool == "refund.cancel" and state != "refund_pending":
+            return f"ledger_state={state or 'none'}"
+        return ""
 
     def _n_act(self, state: AgentState) -> dict:
         plan = state.get("plan") or {}
