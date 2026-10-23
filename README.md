@@ -4,6 +4,29 @@
 
 [![CI](https://github.com/wygxxdm/Mooki/actions/workflows/ci.yml/badge.svg)](https://github.com/wygxxdm/Mooki/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.12-blue)](https://www.python.org/)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
+一句话：**用一个受控拓扑替代 ReAct，把"模型可能乱来"的地方从流程里挤出去**；重点不在能不能答，
+在于每个动作都能在 trace 里复现，效果能被 7 组离线评测量化。
+
+![Mooki 轨迹面板：退款判断](docs/demo-refund.png)
+
+> 左边是对话，右边是这一次 run 的完整轨迹：意图三路投票的每一项分值、规划选了哪个工具、
+> 工具返回的原始 JSON、上下文拼装的 token 分布。点"导出"能拿到整个 trace 的 JSON。
+
+<table>
+<tr>
+<td width="50%"><img src="docs/demo-multiturn.png" alt="多轮：后两句不带单号，订单号从槽位继承" /></td>
+<td width="50%"><img src="docs/demo-complaint.png" alt="P0 投诉：跳过全部判断直接转人工" /></td>
+</tr>
+<tr>
+<td align="center">多轮追问：后两句都不带单号，订单号从结构化槽位继承；<br/>第 3 轮 <code>plan_skip</code> 说明账本已落账，不再重放退款</td>
+<td align="center">P0 投诉：跳过意图判断和工具调用，直接建单转人工</td>
+</tr>
+</table>
+
+复现这几张图：`make serve` 起服务后执行 `node scripts/capture_demo.mjs`（需要 playwright-core
+与本地 Chrome；账本状态会影响退款链路，多轮那张建议先重启服务并清空 `data/ledger.jsonl`）。
 
 ## 为什么做成"受控"Agent
 

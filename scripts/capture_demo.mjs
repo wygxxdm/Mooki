@@ -1,12 +1,15 @@
 // 用系统 Chrome 驱动轨迹面板，产出 README 用的 demo 截图。
 // 前置：先 make serve，然后
-//   node scripts/capture_demo.mjs
+//   node scripts/capture_demo.mjs            # 单轮三张
+//   node scripts/capture_demo.mjs multiturn  # 多轮一张（需要干净账本，否则退款会被幂等跳过）
 // 依赖 playwright-core；若项目里没有，可 npm i -D playwright-core 后再跑。
+// 注意：账本状态会影响退款链路，两组截图之间建议重启服务并清空 data/ledger.jsonl。
 import { chromium } from "playwright-core";
 import { mkdirSync } from "node:fs";
 
 const BASE = process.env.MOOKI_BASE || "http://127.0.0.1:8000";
 const OUT = process.env.OUT_DIR || "docs";
+const MODE = process.argv[2] || "single";
 const CHROME =
   process.env.CHROME_PATH || "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 mkdirSync(OUT, { recursive: true });
@@ -30,23 +33,25 @@ async function send(page, text) {
   await page.waitForTimeout(500);
 }
 
-for (const c of cases) {
-  const page = await browser.newPage({
-    viewport: { width: 1560, height: c.h },
-    deviceScaleFactor: 2,
-  });
-  await page.goto(BASE, { waitUntil: "networkidle" });
-  await page.waitForSelector("#q");
-  await send(page, c.q);
-  await page.$eval("#traceBody", (el) => (el.scrollTop = 0));
-  await page.waitForTimeout(300);
-  await page.screenshot({ path: `${OUT}/${c.file}` });
-  console.log("captured", c.file);
-  await page.close();
+async function captureSingle() {
+  for (const c of cases) {
+    const page = await browser.newPage({
+      viewport: { width: 1560, height: c.h },
+      deviceScaleFactor: 2,
+    });
+    await page.goto(BASE, { waitUntil: "networkidle" });
+    await page.waitForSelector("#q");
+    await send(page, c.q);
+    await page.$eval("#traceBody", (el) => (el.scrollTop = 0));
+    await page.waitForTimeout(300);
+    await page.screenshot({ path: `${OUT}/${c.file}` });
+    console.log("captured", c.file);
+    await page.close();
+  }
 }
 
-// 多轮：第二、三句不带单号，展示结构化槽位继承
-{
+// 多轮：后两句不带单号，展示结构化槽位继承（订单号不参与摘要压缩）
+async function captureMultiturn() {
   const page = await browser.newPage({
     viewport: { width: 1560, height: 1000 },
     deviceScaleFactor: 2,
@@ -55,7 +60,7 @@ for (const c of cases) {
   for (const t of [
     "SO20261018006 我不想要了，能退款吗",
     "那钱多久能到账",
-    "能退到原来的微信吗",
+    "退款进度在哪里看",
   ]) {
     await send(page, t);
   }
@@ -63,5 +68,8 @@ for (const c of cases) {
   console.log("captured demo-multiturn.png");
   await page.close();
 }
+
+if (MODE === "multiturn") await captureMultiturn();
+else await captureSingle();
 
 await browser.close();
