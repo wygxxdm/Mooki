@@ -3,7 +3,7 @@ VENV ?= .venv
 PY ?= $(if $(wildcard $(VENV)/bin/python),$(VENV)/bin/python,$(shell command -v python3 2>/dev/null || command -v python))
 
 .PHONY: help venv install index serve smoke test eval eval-retrieval eval-intent \
-        eval-dialogue eval-multiturn eval-online bench scale embedder concurrency all clean
+        eval-dialogue eval-multiturn eval-online eval-online-retrieval bench scale embedder concurrency all clean
 
 help:
 	@echo "venv            创建 .venv（可选，未创建时直接用 python3）"
@@ -13,9 +13,10 @@ help:
 	@echo "smoke           6 条典型链路冒烟"
 	@echo "test            单测"
 	@echo "eval            全部离线评测（检索 / 意图 / 端到端 / 多轮 / 规模）"
-	@echo "eval-online     在线模式评测（需 .env 配好 LLM/Embedding），产出延迟与 token 成本"
+	@echo "eval-online     在线模式端到端评测（需 .env 配好 LLM），产出延迟与 token 成本"
+	@echo "eval-online-retrieval  在线检索对照（只换改写/重排，向量不动）"
 	@echo "bench           记忆压缩量化 + 延迟分解"
-	@echo "concurrency     退款幂等并发压测（50 并发撞同一请求）"
+	@echo "concurrency     退款幂等并发压测（16 并发撞同一请求）"
 	@echo "scale           规模敏感性实验（近重复干扰注入）"
 	@echo "embedder        向量后端对比（hashing / lsa / api）"
 	@echo "all             一键跑完 test + eval + bench + concurrency + embedder"
@@ -44,6 +45,9 @@ eval:
 
 eval-online:
 	$(PY) -m scripts.run_online_eval
+
+eval-online-retrieval:
+	$(PY) -m scripts.online_retrieval_ablation
 
 bench:
 	$(PY) -m scripts.bench all

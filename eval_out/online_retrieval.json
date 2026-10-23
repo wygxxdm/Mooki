@@ -1,0 +1,714 @@
+{
+  "n": 137,
+  "offline": {
+    "n": 137,
+    "recall@1": 0.5474,
+    "recall@5": 0.8613,
+    "mrr": 0.6625,
+    "ndcg@5": 0.712
+  },
+  "online": {
+    "n": 137,
+    "recall@1": 0.8686,
+    "recall@5": 0.9635,
+    "mrr": 0.9112,
+    "ndcg@5": 0.9246
+  },
+  "offline_seconds": 0.1,
+  "online_seconds": 202.3,
+  "improved": 15,
+  "regressed": 1,
+  "unchanged": 121,
+  "samples": [
+    {
+      "query": "退款多久能到账",
+      "delta@5": 0.0,
+      "effective_query": "退款多久能到账？"
+    },
+    {
+      "query": "钱还没退回来是怎么回事",
+      "delta@5": 0.0,
+      "effective_query": "退款未到账是怎么回事？"
+    },
+    {
+      "query": "银行卡退款要几天",
+      "delta@5": 0.0,
+      "effective_query": "银行卡退款一般需要几天到账？"
+    },
+    {
+      "query": "我不想寄回东西，只想把钱退了",
+      "delta@5": 0.0,
+      "effective_query": "我不想寄回商品，只想退款。"
+    },
+    {
+      "query": "仅退款和退货退款有啥区别",
+      "delta@5": 0.0,
+      "effective_query": "仅退款和退货退款有什么区别？"
+    },
+    {
+      "query": "退款失败提示账户异常",
+      "delta@5": 0.0,
+      "effective_query": "退款失败提示账户异常的原因是什么？"
+    },
+    {
+      "query": "退款走哪一步了怎么看",
+      "delta@5": 0.0,
+      "effective_query": "退款进度在哪里查看？"
+    },
+    {
+      "query": "买了两件只退一件，运费怎么算",
+      "delta@5": 0.0,
+      "effective_query": "购买两件商品只退一件时，退货运费如何计算？"
+    },
+    {
+      "query": "七天无理由是从哪天开始算",
+      "delta@5": 0.0,
+      "effective_query": "七天无理由退货的七天从哪一天开始计算？"
+    },
+    {
+      "query": "哪些东西不能无理由退",
+      "delta@5": 0.0,
+      "effective_query": "哪些商品不支持无理由退货？"
+    },
+    {
+      "query": "收到货有质量问题能直接退吗",
+      "delta@5": 0.0,
+      "effective_query": "收到商品存在质量问题时能否直接退货？"
+    },
+    {
+      "query": "尺码不对想换大一码怎么弄",
+      "delta@5": 0.0,
+      "effective_query": "尺码不对想换大一码，怎么操作换货？"
+    },
+    {
+      "query": "退回去的运费谁出",
+      "delta@5": 0.0,
+      "effective_query": "退货产生的运费由谁承担？"
+    },
+    {
+      "query": "一般几天能送到",
+      "delta@5": -1.0,
+      "effective_query": "一般几天能送到？"
+    },
+    {
+      "query": "快递三天没动静了",
+      "delta@5": 1.0,
+      "effective_query": "快递三天没有物流更新。"
+    },
+    {
+      "query": "显示签收了但我没拿到货",
+      "delta@5": 0.0,
+      "effective_query": "订单显示已签收但本人未收到货。"
+    },
+    {
+      "query": "能不能改收货地址",
+      "delta@5": 0.0,
+      "effective_query": "请问如何修改订单的收货地址？"
+    },
+    {
+      "query": "电子发票在哪下载",
+      "delta@5": 0.0,
+      "effective_query": "电子发票在哪里下载？"
+    },
+    {
+      "query": "发票抬头写错了怎么办",
+      "delta@5": 0.0,
+      "effective_query": "发票抬头填写错误后应如何处理？"
+    },
+    {
+      "query": "能不能开增值税专用发票",
+      "delta@5": 0.0,
+      "effective_query": "能否开具增值税专用发票？"
+    },
+    {
+      "query": "开票要等多久",
+      "delta@5": 0.0,
+      "effective_query": "开票需要等待多久？"
+    },
+    {
+      "query": "优惠券为什么用不了",
+      "delta@5": 0.0,
+      "effective_query": "优惠券为什么无法使用？"
+    },
+    {
+      "query": "满减和店铺券能一起用吗",
+      "delta@5": 0.0,
+      "effective_query": "满减和店铺券能否一起使用？"
+    },
+    {
+      "query": "刚买完就降价了能补差价吗",
+      "delta@5": 0.0,
+      "effective_query": "购买后商品降价能否申请补差价？"
+    },
+    {
+      "query": "券过期了还能补吗",
+      "delta@5": 0.0,
+      "effective_query": "优惠券过期后能否补发？"
+    },
+    {
+      "query": "保修期是多久",
+      "delta@5": 0.0,
+      "effective_query": "保修期是多久？"
+    },
+    {
+      "query": "东西坏了怎么报修",
+      "delta@5": 0.0,
+      "effective_query": "商品损坏后如何申请报修？"
+    },
+    {
+      "query": "手机进水了还能保修吗",
+      "delta@5": 0.0,
+      "effective_query": "手机进水后是否在保修范围内？"
+    },
+    {
+      "query": "延保服务怎么买",
+      "delta@5": 0.0,
+      "effective_query": "如何购买延保服务？"
+    },
+    {
+      "query": "账号登不上了怎么办",
+      "delta@5": 0.0,
+      "effective_query": "账号无法登录怎么办"
+    },
+    {
+      "query": "想换绑手机号",
+      "delta@5": 0.0,
+      "effective_query": "如何更换绑定的手机号？"
+    },
+    {
+      "query": "实名认证一直失败",
+      "delta@5": 0.0,
+      "effective_query": "实名认证一直失败的原因和解决办法是什么？"
+    },
+    {
+      "query": "怎么注销账号",
+      "delta@5": 0.0,
+      "effective_query": "如何注销账号？"
+    },
+    {
+      "query": "订单状态都有哪些",
+      "delta@5": 0.0,
+      "effective_query": "订单状态都有哪些？"
+    },
+    {
+      "query": "还没发货能取消吗",
+      "delta@5": 0.0,
+      "effective_query": "订单尚未发货，能否取消？"
+    },
+    {
+      "query": "收货人电话写错了能改吗",
+      "delta@5": 0.0,
+      "effective_query": "收货人电话填写错误是否可以修改？"
+    },
+    {
+      "query": "为什么我的订单被拆成两个包裹",
+      "delta@5": 1.0,
+      "effective_query": "订单为什么被拆成两个包裹？"
+    },
+    {
+      "query": "投诉多久有人处理",
+      "delta@5": 0.0,
+      "effective_query": "投诉后多久会有人处理？"
+    },
+    {
+      "query": "我要去12315投诉你们",
+      "delta@5": 0.0,
+      "effective_query": "我要去12315投诉你们。"
+    },
+    {
+      "query": "客服态度太差了怎么投诉",
+      "delta@5": 0.0,
+      "effective_query": "如何投诉客服态度差的问题？"
+    },
+    {
+      "query": "没发货的单子能退钱吗",
+      "delta@5": 0.0,
+      "effective_query": "未发货的订单能否退款？"
+    },
+    {
+      "query": "已经发货了还能不要吗",
+      "delta@5": 1.0,
+      "effective_query": "已经发货的订单还能取消吗？"
+    },
+    {
+      "query": "退款金额是按原价还是实付",
+      "delta@5": 0.0,
+      "effective_query": "退款金额是按原价还是按实付金额计算？"
+    },
+    {
+      "query": "用了优惠券的东西退款扣多少",
+      "delta@5": 1.0,
+      "effective_query": "使用优惠券购买的商品退款时会扣除多少金额？"
+    },
+    {
+      "query": "商家一直不点同意怎么办",
+      "delta@5": 1.0,
+      "effective_query": "商家一直不点同意退款申请怎么办？"
+    },
+    {
+      "query": "商家拒绝退款我还能怎么办",
+      "delta@5": 0.0,
+      "effective_query": "商家拒绝退款时消费者可以采取哪些维权措施？"
+    },
+    {
+      "query": "账单里没看到退款记录",
+      "delta@5": 0.0,
+      "effective_query": "账单中未显示退款记录。"
+    },
+    {
+      "query": "退款了券会还给我吗",
+      "delta@5": 0.0,
+      "effective_query": "退款后优惠券会返还吗？"
+    },
+    {
+      "query": "开了发票的东西能退吗",
+      "delta@5": 0.0,
+      "effective_query": "开了发票的商品能否退货？"
+    },
+    {
+      "query": "退款退到余额还是银行卡",
+      "delta@5": 0.0,
+      "effective_query": "退款退到余额还是银行卡？"
+    },
+    {
+      "query": "钱一直不到账是不是丢了",
+      "delta@5": 1.0,
+      "effective_query": "钱一直不到账是不是丢了？"
+    },
+    {
+      "query": "退款太多会被封号吗",
+      "delta@5": 0.0,
+      "effective_query": "退款过多是否会导致账号被封禁？"
+    },
+    {
+      "query": "预售付的定金能退吗",
+      "delta@5": 0.0,
+      "effective_query": "预售商品支付的定金能否退还？"
+    },
+    {
+      "query": "海外买的怎么退",
+      "delta@5": 0.0,
+      "effective_query": "海外购买的商品如何办理退货？"
+    },
+    {
+      "query": "节假日退款会慢吗",
+      "delta@5": 0.0,
+      "effective_query": "节假日退款处理会变慢吗？"
+    },
+    {
+      "query": "退款单号在哪看",
+      "delta@5": 0.0,
+      "effective_query": "退款单号在哪里查看？"
+    },
+    {
+      "query": "承诺48小时发货结果没发",
+      "delta@5": 0.0,
+      "effective_query": "承诺48小时发货但未发货。"
+    },
+    {
+      "query": "很久以前的订单还能查到吗",
+      "delta@5": 0.0,
+      "effective_query": "很久以前的订单是否还能查询到？"
+    },
+    {
+      "query": "帮家里人买的能我申请售后吗",
+      "delta@5": 1.0,
+      "effective_query": "帮家里人买的商品，我能否申请售后？"
+    },
+    {
+      "query": "下单了忘记付款会怎样",
+      "delta@5": 0.0,
+      "effective_query": "下单后忘记付款会有什么后果？"
+    },
+    {
+      "query": "快递到了我拒收会怎样",
+      "delta@5": 0.0,
+      "effective_query": "快递拒收后会怎样处理？"
+    },
+    {
+      "query": "订单显示已完成还能售后吗",
+      "delta@5": 0.0,
+      "effective_query": "订单显示已完成是否还能申请售后？"
+    },
+    {
+      "query": "实付金额是怎么算出来的",
+      "delta@5": 0.0,
+      "effective_query": "实付金额是如何计算的？"
+    },
+    {
+      "query": "商家改了商品页面我还能举证吗",
+      "delta@5": 0.0,
+      "effective_query": "商家修改商品页面后，我是否还能举证？"
+    },
+    {
+      "query": "去年的订单还能开发票吗",
+      "delta@5": 0.0,
+      "effective_query": "去年的订单现在是否还能开发票？"
+    },
+    {
+      "query": "订单显示待审核是什么意思",
+      "delta@5": 0.0,
+      "effective_query": "订单显示待审核是什么意思？"
+    },
+    {
+      "query": "发货后地址写错了还能救吗",
+      "delta@5": 0.0,
+      "effective_query": "发货后收货地址填写错误是否还能修改？"
+    },
+    {
+      "query": "你们发哪几家快递",
+      "delta@5": 0.0,
+      "effective_query": "你们使用哪几家快递公司发货？"
+    },
+    {
+      "query": "运费是怎么收的",
+      "delta@5": 0.0,
+      "effective_query": "运费是如何收取的？"
+    },
+    {
+      "query": "收到的时候盒子烂了",
+      "delta@5": 1.0,
+      "effective_query": "收到的商品包装盒破损。"
+    },
+    {
+      "query": "快递员说送不到让我自提",
+      "delta@5": 0.0,
+      "effective_query": "快递员表示无法送达并要求我自提，应该如何处理？"
+    },
+    {
+      "query": "没经过我同意放快递柜了",
+      "delta@5": 0.0,
+      "effective_query": "快递未经同意被放入快递柜。"
+    },
+    {
+      "query": "能不能加钱送快一点",
+      "delta@5": 1.0,
+      "effective_query": "能否通过加钱升级配送方式以加快配送速度？"
+    },
+    {
+      "query": "海淘的包裹到哪了",
+      "delta@5": 0.0,
+      "effective_query": "海淘包裹的物流状态和当前位置。"
+    },
+    {
+      "query": "冰箱送货上门包安装吗",
+      "delta@5": 0.0,
+      "effective_query": "冰箱送货上门是否包含安装服务？"
+    },
+    {
+      "query": "运输中是什么意思",
+      "delta@5": 0.0,
+      "effective_query": "订单状态显示“运输中”是什么意思？"
+    },
+    {
+      "query": "包裹丢了怎么赔",
+      "delta@5": 0.0,
+      "effective_query": "包裹丢失后如何申请赔偿？"
+    },
+    {
+      "query": "催件和查件有什么不一样",
+      "delta@5": 0.0,
+      "effective_query": "催件和查件有什么区别？"
+    },
+    {
+      "query": "内衣拆了还能退吗",
+      "delta@5": 0.0,
+      "effective_query": "内衣拆封后还能退货吗？"
+    },
+    {
+      "query": "退回去要求包装完整吗",
+      "delta@5": 1.0,
+      "effective_query": "退货时是否要求商品包装完整？"
+    },
+    {
+      "query": "退货的单号填错了怎么办",
+      "delta@5": 0.0,
+      "effective_query": "退货单号填错了应该怎么处理？"
+    },
+    {
+      "query": "商家说我穿过不给退",
+      "delta@5": 0.0,
+      "effective_query": "商家以商品已被穿过为由拒绝退货。"
+    },
+    {
+      "query": "同一件东西能退几次",
+      "delta@5": 0.0,
+      "effective_query": "同一件商品最多可以退几次？"
+    },
+    {
+      "query": "到货少了一件怎么办",
+      "delta@5": 0.0,
+      "effective_query": "到货少了一件商品时应该如何处理？"
+    },
+    {
+      "query": "退货能上门取件吗",
+      "delta@5": 0.0,
+      "effective_query": "退货是否可以上门取件？"
+    },
+    {
+      "query": "赠品要一起退回去吗",
+      "delta@5": 0.0,
+      "effective_query": "赠品是否需要一起退回？"
+    },
+    {
+      "query": "刻字的东西能退吗",
+      "delta@5": 0.0,
+      "effective_query": "刻字商品能否退货？"
+    },
+    {
+      "query": "修和退有什么区别",
+      "delta@5": 0.0,
+      "effective_query": "修和退有什么区别？"
+    },
+    {
+      "query": "退货寄回去了然后呢",
+      "delta@5": 0.0,
+      "effective_query": "退货寄回后还需要做什么？"
+    },
+    {
+      "query": "发票含运费吗",
+      "delta@5": 0.0,
+      "effective_query": "发票金额是否包含运费？"
+    },
+    {
+      "query": "专票怎么申请要什么材料",
+      "delta@5": 0.0,
+      "effective_query": "申请增值税专用发票需要准备哪些材料？"
+    },
+    {
+      "query": "抬头开个人还是公司",
+      "delta@5": 0.0,
+      "effective_query": "发票抬头应开个人还是公司？"
+    },
+    {
+      "query": "发票找不到了能重新开吗",
+      "delta@5": 0.0,
+      "effective_query": "发票丢失后能否重新开具？"
+    },
+    {
+      "query": "退款前要先处理发票吗",
+      "delta@5": 0.0,
+      "effective_query": "退款前是否需要先处理发票？"
+    },
+    {
+      "query": "报销需要发票原件吗",
+      "delta@5": 0.0,
+      "effective_query": "报销是否需要发票原件？"
+    },
+    {
+      "query": "公司采购能不能合并开票",
+      "delta@5": 0.0,
+      "effective_query": "公司采购能否合并开票？"
+    },
+    {
+      "query": "发票信息还能改吗",
+      "delta@5": 0.0,
+      "effective_query": "发票信息还能修改吗？"
+    },
+    {
+      "query": "满减券和折扣券有什么区别",
+      "delta@5": 0.0,
+      "effective_query": "满减券和折扣券有什么区别？"
+    },
+    {
+      "query": "红包能提现吗",
+      "delta@5": 0.0,
+      "effective_query": "红包能否提现？"
+    },
+    {
+      "query": "百亿补贴的东西能用券吗",
+      "delta@5": 0.0,
+      "effective_query": "百亿补贴商品能否使用优惠券？"
+    },
+    {
+      "query": "秒杀抢到了没付款会怎样",
+      "delta@5": 0.0,
+      "effective_query": "秒杀抢到商品但未付款会有什么后果？"
+    },
+    {
+      "query": "跨店满减怎么算",
+      "delta@5": 0.0,
+      "effective_query": "跨店满减的计算规则是什么？"
+    },
+    {
+      "query": "会员价和优惠券能同时用吗",
+      "delta@5": 0.0,
+      "effective_query": "会员价和优惠券能否同时使用？"
+    },
+    {
+      "query": "价保能申请几次",
+      "delta@5": 0.0,
+      "effective_query": "价保可以申请几次？"
+    },
+    {
+      "query": "结算页提示不满足使用条件",
+      "delta@5": 0.0,
+      "effective_query": "结算页提示订单不满足优惠券使用条件。"
+    },
+    {
+      "query": "赠品没收到怎么办",
+      "delta@5": 0.0,
+      "effective_query": "赠品未收到应如何处理？"
+    },
+    {
+      "query": "积分多久过期",
+      "delta@5": 0.0,
+      "effective_query": "积分多久过期？"
+    },
+    {
+      "query": "活动前偷偷涨价再打折",
+      "delta@5": 0.0,
+      "effective_query": "活动前商品偷偷涨价后再打折的售后问题。"
+    },
+    {
+      "query": "三包是哪三包",
+      "delta@5": 0.0,
+      "effective_query": "“三包”政策具体指哪三包？"
+    },
+    {
+      "query": "修了半个月还没好",
+      "delta@5": 1.0,
+      "effective_query": "维修进度半个月仍未完成。"
+    },
+    {
+      "query": "只换不修是什么政策",
+      "delta@5": 0.0,
+      "effective_query": "只换不修政策的具体内容是什么？"
+    },
+    {
+      "query": "过保了修一下多少钱",
+      "delta@5": 1.0,
+      "effective_query": "过保后维修需要多少钱？"
+    },
+    {
+      "query": "电池老化算保修吗",
+      "delta@5": 0.0,
+      "effective_query": "电池老化是否属于保修范围？"
+    },
+    {
+      "query": "买的是拆封机保修怎么算",
+      "delta@5": 0.0,
+      "effective_query": "拆封机保修如何计算？"
+    },
+    {
+      "query": "碎屏险怎么用",
+      "delta@5": 1.0,
+      "effective_query": "碎屏险的使用方法是什么？"
+    },
+    {
+      "query": "没有发票还能保修吗",
+      "delta@5": 0.0,
+      "effective_query": "没有发票是否还能保修？"
+    },
+    {
+      "query": "在外地能保修吗",
+      "delta@5": 0.0,
+      "effective_query": "商品在外地是否支持保修？"
+    },
+    {
+      "query": "这个型号在召回名单里吗",
+      "delta@5": 0.0,
+      "effective_query": "该型号是否在召回名单中？"
+    },
+    {
+      "query": "换过配件之后又坏了",
+      "delta@5": 0.0,
+      "effective_query": "更换配件后再次出现故障。"
+    },
+    {
+      "query": "号被盗了订单被乱下",
+      "delta@5": 0.0,
+      "effective_query": "账号被盗后出现未经授权的订单。"
+    },
+    {
+      "query": "陌生设备登录了我的号",
+      "delta@5": 0.0,
+      "effective_query": "陌生设备登录了我的账号。"
+    },
+    {
+      "query": "密码要多久换一次",
+      "delta@5": 0.0,
+      "effective_query": "密码需要多久更换一次？"
+    },
+    {
+      "query": "为什么我不能下单了",
+      "delta@5": 1.0,
+      "effective_query": "为什么我无法下单？"
+    },
+    {
+      "query": "不想收到推销短信",
+      "delta@5": 0.0,
+      "effective_query": "不想收到推销短信。"
+    },
+    {
+      "query": "给孩子开个账号有限额吗",
+      "delta@5": 0.0,
+      "effective_query": "给孩子开立账户是否有限额？"
+    },
+    {
+      "query": "人脸核身怎么约",
+      "delta@5": 0.0,
+      "effective_query": "如何预约人脸核身？"
+    },
+    {
+      "query": "余额提现多久到账",
+      "delta@5": 0.0,
+      "effective_query": "余额提现多久到账？"
+    },
+    {
+      "query": "工单号怎么查进度",
+      "delta@5": 0.0,
+      "effective_query": "如何查询工单号的进度？"
+    },
+    {
+      "query": "商家卖假货会怎么处理",
+      "delta@5": 0.0,
+      "effective_query": "商家卖假货的处理方式是什么？"
+    },
+    {
+      "query": "怎么证明商家虚假宣传",
+      "delta@5": 0.0,
+      "effective_query": "如何证明商家存在虚假宣传行为？"
+    },
+    {
+      "query": "拖延发货能赔多少",
+      "delta@5": 0.0,
+      "effective_query": "订单拖延发货的赔偿金额是多少？"
+    },
+    {
+      "query": "一直投诉会不会被拉黑",
+      "delta@5": 0.0,
+      "effective_query": "一直投诉是否会被商家或平台拉黑？"
+    },
+    {
+      "query": "举报和投诉有什么不一样",
+      "delta@5": 0.0,
+      "effective_query": "举报和投诉有什么区别？"
+    },
+    {
+      "query": "我要发微博曝光你们",
+      "delta@5": 0.0,
+      "effective_query": "用户表示要发微博曝光我们。"
+    },
+    {
+      "query": "12315转过来的工单多久回",
+      "delta@5": 1.0,
+      "effective_query": "12315转过来的工单多久回复？"
+    },
+    {
+      "query": "处理完之后会有人回访吗",
+      "delta@5": 0.0,
+      "effective_query": "处理完成后是否会有回访？"
+    },
+    {
+      "query": "能把客服录音调出来吗",
+      "delta@5": 0.0,
+      "effective_query": "能否调出客服录音？"
+    }
+  ],
+  "llm_usage": {
+    "calls": 274,
+    "prompt_tokens": 173590,
+    "completion_tokens": 2539
+  }
+}
