@@ -1,0 +1,1550 @@
+[
+ {
+  "query": "帮我查下订单到哪了",
+  "gold": "order_status",
+  "llm": {
+   "label": "logistics",
+   "score": 0.98
+  },
+  "dense": {
+   "label": "order_status",
+   "score": 0.9638
+  },
+  "rule": {
+   "label": "logistics",
+   "score": 0.72
+  }
+ },
+ {
+  "query": "SO20260512001 现在什么状态",
+  "gold": "order_status",
+  "llm": {
+   "label": "order_status",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "order_status",
+   "score": 0.9853
+  },
+  "rule": null
+ },
+ {
+  "query": "昨天下单的怎么还没发货",
+  "gold": "order_status",
+  "llm": {
+   "label": "order_status",
+   "score": 0.92
+  },
+  "dense": {
+   "label": "order_status",
+   "score": 0.9997
+  },
+  "rule": {
+   "label": "order_status",
+   "score": 0.72
+  }
+ },
+ {
+  "query": "我的单子显示已支付但没动静",
+  "gold": "order_status",
+  "llm": {
+   "label": "order_status",
+   "score": 0.9
+  },
+  "dense": {
+   "label": "order_status",
+   "score": 0.95
+  },
+  "rule": null
+ },
+ {
+  "query": "我要退款，东西不想要了",
+  "gold": "refund",
+  "llm": {
+   "label": "refund",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "refund",
+   "score": 1.0
+  },
+  "rule": {
+   "label": "refund",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "退款三天了钱还没到",
+  "gold": "refund",
+  "llm": {
+   "label": "refund",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "refund",
+   "score": 0.9894
+  },
+  "rule": {
+   "label": "refund",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "取消订单以后钱退哪去了",
+  "gold": "refund",
+  "llm": {
+   "label": "refund",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "refund",
+   "score": 0.9816
+  },
+  "rule": {
+   "label": "order_status",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "这个订单能退我多少钱",
+  "gold": "refund",
+  "llm": {
+   "label": "refund",
+   "score": 0.92
+  },
+  "dense": {
+   "label": "refund",
+   "score": 0.9995
+  },
+  "rule": {
+   "label": "refund",
+   "score": 0.76
+  }
+ },
+ {
+  "query": "收到的东西质量有问题我要退货",
+  "gold": "return_exchange",
+  "llm": {
+   "label": "return_exchange",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "return_exchange",
+   "score": 0.993
+  },
+  "rule": {
+   "label": "return_exchange",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "尺码不合适想换大一码",
+  "gold": "return_exchange",
+  "llm": {
+   "label": "return_exchange",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "return_exchange",
+   "score": 1.0
+  },
+  "rule": {
+   "label": "return_exchange",
+   "score": 0.92
+  }
+ },
+ {
+  "query": "七天无理由怎么操作",
+  "gold": "return_exchange",
+  "llm": {
+   "label": "return_exchange",
+   "score": 0.92
+  },
+  "dense": {
+   "label": "return_exchange",
+   "score": 0.9938
+  },
+  "rule": {
+   "label": "return_exchange",
+   "score": 0.8
+  }
+ },
+ {
+  "query": "颜色发错了能换货吗",
+  "gold": "return_exchange",
+  "llm": {
+   "label": "return_exchange",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "return_exchange",
+   "score": 0.9658
+  },
+  "rule": {
+   "label": "return_exchange",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "快递停在揽收三天了",
+  "gold": "logistics",
+  "llm": {
+   "label": "logistics",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "logistics",
+   "score": 0.8781
+  },
+  "rule": {
+   "label": "logistics",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "什么时候能送到我着急用",
+  "gold": "logistics",
+  "llm": {
+   "label": "logistics",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "logistics",
+   "score": 1.0
+  },
+  "rule": null
+ },
+ {
+  "query": "显示已签收但我没收到",
+  "gold": "logistics",
+  "llm": {
+   "label": "logistics",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "logistics",
+   "score": 1.0
+  },
+  "rule": {
+   "label": "logistics",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "发的是什么快递能改地址吗",
+  "gold": "logistics",
+  "llm": {
+   "label": "logistics",
+   "score": 0.92
+  },
+  "dense": {
+   "label": "logistics",
+   "score": 1.0
+  },
+  "rule": {
+   "label": "logistics",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "我要投诉你们的服务态度",
+  "gold": "complaint",
+  "llm": {
+   "label": "complaint",
+   "score": 0.98
+  },
+  "dense": {
+   "label": "complaint",
+   "score": 0.9844
+  },
+  "rule": {
+   "label": "complaint",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "再不处理我就去12315",
+  "gold": "complaint",
+  "llm": {
+   "label": "complaint",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "complaint",
+   "score": 0.9944
+  },
+  "rule": {
+   "label": "complaint",
+   "score": 0.8
+  }
+ },
+ {
+  "query": "这是虚假宣传我要举报",
+  "gold": "complaint",
+  "llm": {
+   "label": "complaint",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "complaint",
+   "score": 0.9929
+  },
+  "rule": {
+   "label": "complaint",
+   "score": 0.86
+  }
+ },
+ {
+  "query": "连续三次都没解决我要找媒体",
+  "gold": "complaint",
+  "llm": {
+   "label": "complaint",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "complaint",
+   "score": 1.0
+  },
+  "rule": null
+ },
+ {
+  "query": "这个耳机支持主动降噪吗",
+  "gold": "product_consult",
+  "llm": {
+   "label": "product_consult",
+   "score": 0.98
+  },
+  "dense": {
+   "label": "product_consult",
+   "score": 1.0
+  },
+  "rule": null
+ },
+ {
+  "query": "保修期多久坏了怎么修",
+  "gold": "product_consult",
+  "llm": {
+   "label": "product_consult",
+   "score": 0.92
+  },
+  "dense": {
+   "label": "product_consult",
+   "score": 0.999
+  },
+  "rule": {
+   "label": "product_consult",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "这个材质会不会过敏",
+  "gold": "product_consult",
+  "llm": {
+   "label": "product_consult",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "product_consult",
+   "score": 0.9571
+  },
+  "rule": {
+   "label": "product_consult",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "两款有什么区别推荐哪个",
+  "gold": "product_consult",
+  "llm": {
+   "label": "product_consult",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "product_consult",
+   "score": 1.0
+  },
+  "rule": {
+   "label": "product_consult",
+   "score": 0.8
+  }
+ },
+ {
+  "query": "我要开发票怎么开",
+  "gold": "invoice",
+  "llm": {
+   "label": "invoice",
+   "score": 0.98
+  },
+  "dense": {
+   "label": "invoice",
+   "score": 1.0
+  },
+  "rule": {
+   "label": "invoice",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "电子发票在哪里下载",
+  "gold": "invoice",
+  "llm": {
+   "label": "invoice",
+   "score": 0.98
+  },
+  "dense": {
+   "label": "invoice",
+   "score": 1.0
+  },
+  "rule": {
+   "label": "invoice",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "发票抬头写错了能重开吗",
+  "gold": "invoice",
+  "llm": {
+   "label": "invoice",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "invoice",
+   "score": 1.0
+  },
+  "rule": {
+   "label": "invoice",
+   "score": 0.78
+  }
+ },
+ {
+  "query": "能不能开增值税专用发票",
+  "gold": "invoice",
+  "llm": {
+   "label": "invoice",
+   "score": 0.98
+  },
+  "dense": {
+   "label": "invoice",
+   "score": 1.0
+  },
+  "rule": {
+   "label": "invoice",
+   "score": 0.82
+  }
+ },
+ {
+  "query": "优惠券为什么下单用不了",
+  "gold": "promo",
+  "llm": {
+   "label": "promo",
+   "score": 0.92
+  },
+  "dense": {
+   "label": "promo",
+   "score": 1.0
+  },
+  "rule": {
+   "label": "promo",
+   "score": 0.72
+  }
+ },
+ {
+  "query": "这个能叠加满减吗",
+  "gold": "promo",
+  "llm": {
+   "label": "promo",
+   "score": 0.92
+  },
+  "dense": {
+   "label": "promo",
+   "score": 0.9661
+  },
+  "rule": {
+   "label": "promo",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "刚买完就降价了能价保吗",
+  "gold": "promo",
+  "llm": {
+   "label": "promo",
+   "score": 0.92
+  },
+  "dense": {
+   "label": "promo",
+   "score": 0.9919
+  },
+  "rule": null
+ },
+ {
+  "query": "我的券过期了能补吗",
+  "gold": "promo",
+  "llm": {
+   "label": "promo",
+   "score": 0.92
+  },
+  "dense": {
+   "label": "promo",
+   "score": 1.0
+  },
+  "rule": null
+ },
+ {
+  "query": "账号验证码收不到登不上",
+  "gold": "account",
+  "llm": {
+   "label": "account",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "account",
+   "score": 0.9989
+  },
+  "rule": {
+   "label": "account",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "我要换绑手机号",
+  "gold": "account",
+  "llm": {
+   "label": "account",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "account",
+   "score": 1.0
+  },
+  "rule": {
+   "label": "account",
+   "score": 0.72
+  }
+ },
+ {
+  "query": "账号好像被盗了订单不是我下的",
+  "gold": "account",
+  "llm": {
+   "label": "account",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "account",
+   "score": 1.0
+  },
+  "rule": {
+   "label": "account",
+   "score": 0.78
+  }
+ },
+ {
+  "query": "实名认证一直失败",
+  "gold": "account",
+  "llm": {
+   "label": "account",
+   "score": 0.92
+  },
+  "dense": {
+   "label": "account",
+   "score": 1.0
+  },
+  "rule": {
+   "label": "account",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "转人工客服",
+  "gold": "other",
+  "llm": {
+   "label": "other",
+   "score": 0.72
+  },
+  "dense": {
+   "label": "other",
+   "score": 1.0
+  },
+  "rule": {
+   "label": "other",
+   "score": 0.92
+  }
+ },
+ {
+  "query": "在吗问个事",
+  "gold": "other",
+  "llm": {
+   "label": "other",
+   "score": 0.55
+  },
+  "dense": {
+   "label": "other",
+   "score": 1.0
+  },
+  "rule": {
+   "label": "other",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "你们几点上班",
+  "gold": "other",
+  "llm": {
+   "label": "other",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "other",
+   "score": 1.0
+  },
+  "rule": null
+ },
+ {
+  "query": "这个怎么处理",
+  "gold": "other",
+  "llm": {
+   "label": "other",
+   "score": 0.3
+  },
+  "dense": {
+   "label": "other",
+   "score": 1.0
+  },
+  "rule": null
+ },
+ {
+  "query": "我上周买的东西到现在没动静",
+  "gold": "order_status",
+  "llm": {
+   "label": "logistics",
+   "score": 0.85
+  },
+  "dense": {
+   "label": "order_status",
+   "score": 0.6595
+  },
+  "rule": null
+ },
+ {
+  "query": "订单怎么查物流到哪了",
+  "gold": "order_status",
+  "llm": {
+   "label": "logistics",
+   "score": 0.98
+  },
+  "dense": {
+   "label": "refund",
+   "score": 0.5142
+  },
+  "rule": {
+   "label": "logistics",
+   "score": 0.82
+  }
+ },
+ {
+  "query": "刚付款什么时候能发货",
+  "gold": "order_status",
+  "llm": {
+   "label": "logistics",
+   "score": 0.85
+  },
+  "dense": {
+   "label": "logistics",
+   "score": 0.7669
+  },
+  "rule": null
+ },
+ {
+  "query": "这个单子是不是还没出库",
+  "gold": "order_status",
+  "llm": {
+   "label": "logistics",
+   "score": 0.92
+  },
+  "dense": {
+   "label": "order_status",
+   "score": 0.8423
+  },
+  "rule": {
+   "label": "order_status",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "支付成功但订单没生成",
+  "gold": "order_status",
+  "llm": {
+   "label": "order_status",
+   "score": 0.92
+  },
+  "dense": {
+   "label": "order_status",
+   "score": 0.8429
+  },
+  "rule": {
+   "label": "order_status",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "帮我看看这单什么情况 SO20260512001",
+  "gold": "order_status",
+  "llm": {
+   "label": "order_status",
+   "score": 0.85
+  },
+  "dense": {
+   "label": "order_status",
+   "score": 0.7063
+  },
+  "rule": null
+ },
+ {
+  "query": "显示待收货但是我还没收到",
+  "gold": "order_status",
+  "llm": {
+   "label": "logistics",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "logistics",
+   "score": 0.8722
+  },
+  "rule": null
+ },
+ {
+  "query": "钱一直没退回来",
+  "gold": "refund",
+  "llm": {
+   "label": "refund",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "order_status",
+   "score": 0.8778
+  },
+  "rule": {
+   "label": "refund",
+   "score": 0.72
+  }
+ },
+ {
+  "query": "退款申请被拒了怎么办",
+  "gold": "refund",
+  "llm": {
+   "label": "refund",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "refund",
+   "score": 0.7483
+  },
+  "rule": {
+   "label": "refund",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "我不想退货直接退钱可以吗",
+  "gold": "refund",
+  "llm": {
+   "label": "refund",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "refund",
+   "score": 0.623
+  },
+  "rule": {
+   "label": "refund",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "退款退到哪里去了",
+  "gold": "refund",
+  "llm": {
+   "label": "refund",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "refund",
+   "score": 0.8172
+  },
+  "rule": {
+   "label": "refund",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "已经退了三天了还没到账",
+  "gold": "refund",
+  "llm": {
+   "label": "refund",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "refund",
+   "score": 0.9782
+  },
+  "rule": null
+ },
+ {
+  "query": "取消订单后钱多久回来",
+  "gold": "refund",
+  "llm": {
+   "label": "refund",
+   "score": 0.92
+  },
+  "dense": {
+   "label": "refund",
+   "score": 0.9339
+  },
+  "rule": {
+   "label": "order_status",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "这个能退多少钱",
+  "gold": "refund",
+  "llm": {
+   "label": "refund",
+   "score": 0.9
+  },
+  "dense": {
+   "label": "refund",
+   "score": 0.952
+  },
+  "rule": {
+   "label": "refund",
+   "score": 0.72
+  }
+ },
+ {
+  "query": "部分退款怎么操作",
+  "gold": "refund",
+  "llm": {
+   "label": "refund",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "return_exchange",
+   "score": 0.8464
+  },
+  "rule": {
+   "label": "refund",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "东西收到不合适想退",
+  "gold": "return_exchange",
+  "llm": {
+   "label": "return_exchange",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "return_exchange",
+   "score": 0.8207
+  },
+  "rule": null
+ },
+ {
+  "query": "包装拆了还能退吗",
+  "gold": "return_exchange",
+  "llm": {
+   "label": "return_exchange",
+   "score": 0.92
+  },
+  "dense": {
+   "label": "refund",
+   "score": 0.982
+  },
+  "rule": null
+ },
+ {
+  "query": "要退回去怎么寄",
+  "gold": "return_exchange",
+  "llm": {
+   "label": "return_exchange",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "refund",
+   "score": 0.5617
+  },
+  "rule": null
+ },
+ {
+  "query": "换一个颜色可以吗",
+  "gold": "return_exchange",
+  "llm": {
+   "label": "return_exchange",
+   "score": 0.82
+  },
+  "dense": {
+   "label": "return_exchange",
+   "score": 0.746
+  },
+  "rule": {
+   "label": "return_exchange",
+   "score": 0.72
+  }
+ },
+ {
+  "query": "收到的是坏的怎么换",
+  "gold": "return_exchange",
+  "llm": {
+   "label": "return_exchange",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "return_exchange",
+   "score": 0.6769
+  },
+  "rule": null
+ },
+ {
+  "query": "七天无理由怎么申请",
+  "gold": "return_exchange",
+  "llm": {
+   "label": "return_exchange",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "return_exchange",
+   "score": 0.9784
+  },
+  "rule": {
+   "label": "return_exchange",
+   "score": 0.8
+  }
+ },
+ {
+  "query": "退货运费谁承担",
+  "gold": "return_exchange",
+  "llm": {
+   "label": "return_exchange",
+   "score": 0.92
+  },
+  "dense": {
+   "label": "return_exchange",
+   "score": 0.9287
+  },
+  "rule": {
+   "label": "return_exchange",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "包裹在分拨中心停了很久",
+  "gold": "logistics",
+  "llm": {
+   "label": "logistics",
+   "score": 0.95
+  },
+  "dense": null,
+  "rule": null
+ },
+ {
+  "query": "快递员一直不派送",
+  "gold": "logistics",
+  "llm": {
+   "label": "logistics",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "logistics",
+   "score": 0.7592
+  },
+  "rule": {
+   "label": "logistics",
+   "score": 0.78
+  }
+ },
+ {
+  "query": "物流显示异常件什么意思",
+  "gold": "logistics",
+  "llm": {
+   "label": "logistics",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "logistics",
+   "score": 0.5755
+  },
+  "rule": {
+   "label": "logistics",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "能催一下快递吗",
+  "gold": "logistics",
+  "llm": {
+   "label": "logistics",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "order_status",
+   "score": 0.6213
+  },
+  "rule": {
+   "label": "logistics",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "包裹被快递柜代收了但我没取",
+  "gold": "logistics",
+  "llm": {
+   "label": "logistics",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "logistics",
+   "score": 0.871
+  },
+  "rule": {
+   "label": "logistics",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "改派到另一个地址行不行",
+  "gold": "logistics",
+  "llm": {
+   "label": "logistics",
+   "score": 0.82
+  },
+  "dense": {
+   "label": "logistics",
+   "score": 0.7477
+  },
+  "rule": null
+ },
+ {
+  "query": "同城一般几天到",
+  "gold": "logistics",
+  "llm": {
+   "label": "logistics",
+   "score": 0.92
+  },
+  "dense": null,
+  "rule": null
+ },
+ {
+  "query": "我要投诉商家不发货",
+  "gold": "complaint",
+  "llm": {
+   "label": "complaint",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "complaint",
+   "score": 0.8352
+  },
+  "rule": {
+   "label": "complaint",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "客服一直敷衍我",
+  "gold": "complaint",
+  "llm": {
+   "label": "complaint",
+   "score": 0.9
+  },
+  "dense": {
+   "label": "other",
+   "score": 0.6855
+  },
+  "rule": {
+   "label": "other",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "这个属于虚假宣传吧",
+  "gold": "complaint",
+  "llm": {
+   "label": "complaint",
+   "score": 0.82
+  },
+  "dense": {
+   "label": "complaint",
+   "score": 0.9016
+  },
+  "rule": {
+   "label": "complaint",
+   "score": 0.76
+  }
+ },
+ {
+  "query": "我要找你们领导",
+  "gold": "complaint",
+  "llm": {
+   "label": "complaint",
+   "score": 0.9
+  },
+  "dense": {
+   "label": "other",
+   "score": 0.7641
+  },
+  "rule": null
+ },
+ {
+  "query": "再不处理我就发网上",
+  "gold": "complaint",
+  "llm": {
+   "label": "complaint",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "complaint",
+   "score": 0.9905
+  },
+  "rule": null
+ },
+ {
+  "query": "我要举报这家店卖假货",
+  "gold": "complaint",
+  "llm": {
+   "label": "complaint",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "complaint",
+   "score": 0.9489
+  },
+  "rule": {
+   "label": "complaint",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "投诉处理结果我不认可",
+  "gold": "complaint",
+  "llm": {
+   "label": "complaint",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "complaint",
+   "score": 0.8158
+  },
+  "rule": {
+   "label": "complaint",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "这个和另一款差别大吗",
+  "gold": "product_consult",
+  "llm": {
+   "label": "product_consult",
+   "score": 0.9
+  },
+  "dense": {
+   "label": "other",
+   "score": 0.5936
+  },
+  "rule": null
+ },
+ {
+  "query": "电池能用多久",
+  "gold": "product_consult",
+  "llm": {
+   "label": "product_consult",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "product_consult",
+   "score": 0.9896
+  },
+  "rule": null
+ },
+ {
+  "query": "支持七天无理由吗这款",
+  "gold": "product_consult",
+  "llm": {
+   "label": "product_consult",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "return_exchange",
+   "score": 0.9556
+  },
+  "rule": {
+   "label": "return_exchange",
+   "score": 0.8
+  }
+ },
+ {
+  "query": "这个尺码偏大还是偏小",
+  "gold": "product_consult",
+  "llm": {
+   "label": "product_consult",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "return_exchange",
+   "score": 0.592
+  },
+  "rule": {
+   "label": "return_exchange",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "材质是纯棉的吗",
+  "gold": "product_consult",
+  "llm": {
+   "label": "product_consult",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "product_consult",
+   "score": 0.9774
+  },
+  "rule": {
+   "label": "product_consult",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "适合冬天用吗",
+  "gold": "product_consult",
+  "llm": {
+   "label": "product_consult",
+   "score": 0.95
+  },
+  "dense": null,
+  "rule": null
+ },
+ {
+  "query": "买完能补开发票吗",
+  "gold": "invoice",
+  "llm": {
+   "label": "invoice",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "invoice",
+   "score": 0.7952
+  },
+  "rule": {
+   "label": "invoice",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "发票能不能开公司的",
+  "gold": "invoice",
+  "llm": {
+   "label": "invoice",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "invoice",
+   "score": 0.9684
+  },
+  "rule": {
+   "label": "invoice",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "专票要什么资质",
+  "gold": "invoice",
+  "llm": {
+   "label": "invoice",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "promo",
+   "score": 0.5048
+  },
+  "rule": null
+ },
+ {
+  "query": "发票金额包含运费吗",
+  "gold": "invoice",
+  "llm": {
+   "label": "invoice",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "return_exchange",
+   "score": 0.87
+  },
+  "rule": {
+   "label": "logistics",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "退款了发票要红冲吗",
+  "gold": "invoice",
+  "llm": {
+   "label": "invoice",
+   "score": 0.92
+  },
+  "dense": {
+   "label": "refund",
+   "score": 0.4838
+  },
+  "rule": {
+   "label": "refund",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "发票丢了怎么办",
+  "gold": "invoice",
+  "llm": {
+   "label": "invoice",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "product_consult",
+   "score": 0.658
+  },
+  "rule": {
+   "label": "invoice",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "为什么结算时券没减",
+  "gold": "promo",
+  "llm": {
+   "label": "promo",
+   "score": 0.92
+  },
+  "dense": {
+   "label": "promo",
+   "score": 0.8645
+  },
+  "rule": null
+ },
+ {
+  "query": "红包和券能一起用吗",
+  "gold": "promo",
+  "llm": {
+   "label": "promo",
+   "score": 0.95
+  },
+  "dense": null,
+  "rule": null
+ },
+ {
+  "query": "价保怎么申请",
+  "gold": "promo",
+  "llm": {
+   "label": "promo",
+   "score": 0.82
+  },
+  "dense": {
+   "label": "promo",
+   "score": 0.5425
+  },
+  "rule": null
+ },
+ {
+  "query": "百亿补贴能用券吗",
+  "gold": "promo",
+  "llm": {
+   "label": "promo",
+   "score": 0.92
+  },
+  "dense": null,
+  "rule": {
+   "label": "promo",
+   "score": 0.76
+  }
+ },
+ {
+  "query": "积分能抵多少钱",
+  "gold": "promo",
+  "llm": {
+   "label": "promo",
+   "score": 0.82
+  },
+  "dense": {
+   "label": "refund",
+   "score": 0.982
+  },
+  "rule": null
+ },
+ {
+  "query": "会员价还能叠加优惠吗",
+  "gold": "promo",
+  "llm": {
+   "label": "promo",
+   "score": 0.92
+  },
+  "dense": {
+   "label": "promo",
+   "score": 0.8942
+  },
+  "rule": null
+ },
+ {
+  "query": "登录提示账号异常",
+  "gold": "account",
+  "llm": {
+   "label": "account",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "account",
+   "score": 0.8032
+  },
+  "rule": {
+   "label": "account",
+   "score": 0.78
+  }
+ },
+ {
+  "query": "怎么解绑实名",
+  "gold": "account",
+  "llm": {
+   "label": "account",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "account",
+   "score": 0.6632
+  },
+  "rule": {
+   "label": "account",
+   "score": 0.78
+  }
+ },
+ {
+  "query": "账号被限制了怎么解除",
+  "gold": "account",
+  "llm": {
+   "label": "account",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "account",
+   "score": 0.7198
+  },
+  "rule": {
+   "label": "account",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "想改支付密码",
+  "gold": "account",
+  "llm": {
+   "label": "account",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "order_status",
+   "score": 0.9722
+  },
+  "rule": {
+   "label": "account",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "余额提现失败",
+  "gold": "account",
+  "llm": {
+   "label": "account",
+   "score": 0.82
+  },
+  "dense": {
+   "label": "account",
+   "score": 0.9933
+  },
+  "rule": null
+ },
+ {
+  "query": "注销账号有冷静期吗",
+  "gold": "account",
+  "llm": {
+   "label": "account",
+   "score": 0.95
+  },
+  "dense": {
+   "label": "account",
+   "score": 0.9782
+  },
+  "rule": {
+   "label": "account",
+   "score": 0.78
+  }
+ },
+ {
+  "query": "你好",
+  "gold": "other",
+  "llm": {
+   "label": "other",
+   "score": 0.95
+  },
+  "dense": null,
+  "rule": {
+   "label": "other",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "有人在吗",
+  "gold": "other",
+  "llm": {
+   "label": "other",
+   "score": 0.55
+  },
+  "dense": {
+   "label": "other",
+   "score": 1.0
+  },
+  "rule": {
+   "label": "other",
+   "score": 0.68
+  }
+ },
+ {
+  "query": "谢谢",
+  "gold": "other",
+  "llm": {
+   "label": "other",
+   "score": 0.9
+  },
+  "dense": null,
+  "rule": null
+ },
+ {
+  "query": "我想问个事",
+  "gold": "other",
+  "llm": {
+   "label": "other",
+   "score": 0.55
+  },
+  "dense": {
+   "label": "other",
+   "score": 1.0
+  },
+  "rule": null
+ },
+ {
+  "query": "嗯嗯",
+  "gold": "other",
+  "llm": {
+   "label": "other",
+   "score": 0.3
+  },
+  "dense": null,
+  "rule": null
+ }
+]

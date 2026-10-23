@@ -83,7 +83,7 @@ class AgentRuntime:
 
         self.rewriter = QueryRewriter(self.llm, self.rewrite_cache)
         self.retriever = Retriever(s, self.embedder, self.llm, self.index, self.retrieval_cache, self.rewriter)
-        self.classifier = IntentClassifier(self.llm, self.embedder, self.intent_cache)
+        self.classifier = IntentClassifier(self.llm, self.embedder, self.intent_cache, settings=s)
 
         self.short_term = ShortTermMemory(self.kv, window=s.short_term_window)
         self.episodic = EpisodicMemory(self.embedder, path=s.index_dir / "episodic", top_k=s.episodic_top_k)

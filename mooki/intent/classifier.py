@@ -23,22 +23,44 @@ from mooki.core.text import normalize_text
 from mooki.intent.labels import INTENT_SPECS, rule_urgency
 from mooki.intent.rules import rule_scores
 
-def base_weights() -> dict[VoteSource, float]:
-    """默认权重来自配置，可用 MOOKI_INTENT_WEIGHT_* 覆盖。
+# 离线替身下的标定结果：LLM 是词袋假扮的，规则通道最稳
+OFFLINE_WEIGHTS = {"llm": 0.25, "dense": 0.10, "rule": 0.65}
+# 真实模型下的标定结果（105 条 query 三路投票重新取一次，dev 网格搜索，test 只报一次）
+ONLINE_WEIGHTS = {"llm": 0.55, "dense": 0.05, "rule": 0.40}
 
-    留出实验证明这组权重是**超参**：默认按「LLM 最强」假设给 0.55，
-    在小样本留出下 LLM 路反而最弱，融合被拖到不如单路。权重必须由 dev 集标定。
+
+def base_weights(settings=None) -> dict[VoteSource, float]:
+    """三路权重。
+
+    这是**超参，而且绑在"哪套通道"上**，不是绑在业务上：
+    - 离线替身表达能力弱，dev 标定出 rule 0.65 / llm 0.25，融合 0.85；
+    - 换成真模型后同一份数据重新标定，最优回到 llm 0.55 / rule 0.40，test 0.969；
+      而沿用离线那组权重只有 0.875。
+
+    所以没有显式配置时，按当前 LLM 是不是替身给一组默认值；显式设了
+    MOOKI_INTENT_WEIGHT_* 就以配置为准。
     """
+    st = settings or default_settings
+    explicit = st.model_fields_set
+    if "intent_weight_llm" not in explicit:
+        chosen = OFFLINE_WEIGHTS if st.llm_offline else ONLINE_WEIGHTS
+        return {
+            VoteSource.LLM: chosen["llm"],
+            VoteSource.DENSE: chosen["dense"],
+            VoteSource.RULE: chosen["rule"],
+        }
     return {
-        VoteSource.LLM: default_settings.intent_weight_llm,
-        VoteSource.DENSE: default_settings.intent_weight_dense,
-        VoteSource.RULE: default_settings.intent_weight_rule,
+        VoteSource.LLM: st.intent_weight_llm,
+        VoteSource.DENSE: st.intent_weight_dense,
+        VoteSource.RULE: st.intent_weight_rule,
     }
 
 
 class IntentClassifier:
-    def __init__(self, llm, embedder, cache: TTLCache, exemplar_exclude: set[str] | None = None):
+    def __init__(self, llm, embedder, cache: TTLCache, exemplar_exclude: set[str] | None = None,
+                 settings=None):
         self.llm = llm
+        self.settings = settings or default_settings
         self.cache = cache
         self.exemplar_exclude = exemplar_exclude or set()
         # 意图样本走独立的特征空间，避免复用知识库的 LSA 导致大量 OOV
@@ -103,7 +125,7 @@ class IntentClassifier:
 
     def _weights(self, votes: list[Vote]) -> dict[VoteSource, float]:
         present = {v.source for v in votes}
-        base = base_weights()
+        base = base_weights(self.settings)
         weights = {s: base[s] for s in present}
         llm_vote = next((v for v in votes if v.source is VoteSource.LLM), None)
         if llm_vote is not None and llm_vote.score < 0.5 and len(weights) > 1:
