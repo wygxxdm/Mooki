@@ -17,6 +17,9 @@ dist/
 # 运行时数据
 data/tickets.jsonl
 data/ledger.jsonl
+data/ledger.db
+data/ledger.db-wal
+data/ledger.db-shm
 
 # 系统
 .DS_Store

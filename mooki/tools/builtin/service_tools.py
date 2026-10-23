@@ -17,7 +17,7 @@ import uuid
 from pathlib import Path
 from typing import Any
 
-from mooki.tools.ledger import OrderLedger, derive_idem
+from mooki.tools.ledger import build_ledger, derive_idem
 from mooki.tools.registry import ToolContext, ToolRegistry, ToolSpec
 
 NO_REASON_DAYS = 7
@@ -40,7 +40,7 @@ class ServiceTools:
         order_file = data_dir / "orders.json"
         self.orders: dict[str, dict] = json.loads(order_file.read_text(encoding="utf-8"))
         self.ticket_path = ticket_path or (data_dir / "tickets.jsonl")
-        self.ledger = OrderLedger(ledger_path or (data_dir / "ledger.jsonl"))
+        self.ledger = build_ledger(ledger_path or (data_dir / "ledger.db"))
         self.refund_fault_rate = refund_fault_rate
         self._gateway_fail_next = False  # 供测试注入确定性故障
 

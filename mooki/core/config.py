@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     data_dir: Path = ROOT / "data"
     kb_dir: Path = ROOT / "data" / "kb"
     order_file: Path = ROOT / "data" / "orders.json"
-    ledger_file: Path = ROOT / "data" / "ledger.jsonl"
+    ledger_file: Path = ROOT / "data" / "ledger.db"
     index_dir: Path = ROOT / ".mooki_index"
 
     # ---------- LLM ----------

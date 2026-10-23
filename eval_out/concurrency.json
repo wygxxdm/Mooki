@@ -1,0 +1,54 @@
+{
+  "workers": 16,
+  "order_id": "SO20261018006",
+  "rounds": [
+    {
+      "backend": "sqlite",
+      "mode": "threads",
+      "workers": 16,
+      "elapsed_ms": 105.8,
+      "created": 1,
+      "duplicate": 15,
+      "distinct_refund_ids": 1,
+      "blocked": 0,
+      "double_refund": false
+    },
+    {
+      "backend": "sqlite",
+      "mode": "processes",
+      "workers": 16,
+      "elapsed_ms": 3530.5,
+      "created": 1,
+      "duplicate": 15,
+      "distinct_refund_ids": 1,
+      "blocked": 0,
+      "double_refund": false
+    },
+    {
+      "backend": "jsonl",
+      "mode": "threads",
+      "workers": 16,
+      "elapsed_ms": 177.4,
+      "created": 16,
+      "duplicate": 0,
+      "distinct_refund_ids": 16,
+      "blocked": 0,
+      "double_refund": true
+    },
+    {
+      "backend": "jsonl",
+      "mode": "processes",
+      "workers": 16,
+      "elapsed_ms": 3438.5,
+      "created": 9,
+      "duplicate": 7,
+      "distinct_refund_ids": 9,
+      "blocked": 0,
+      "double_refund": true
+    }
+  ],
+  "conclusion": {
+    "sqlite_process_safe": true,
+    "jsonl_cross_process_unsafe": true
+  }
+}

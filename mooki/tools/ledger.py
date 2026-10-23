@@ -17,6 +17,7 @@
 from __future__ import annotations
 
 import json
+import sqlite3
 import threading
 import time
 from dataclasses import asdict, dataclass, field
@@ -167,3 +168,140 @@ def derive_idem(*parts: str, bucket_seconds: int = 300) -> str:
     """
     bucket = int(time.time() // bucket_seconds)
     return "|".join([*parts, str(bucket)])
+
+
+class SqliteLedger(OrderLedger):
+    """SQLite 版账本：把幂等键的唯一性交给数据库约束，而不是进程内的锁。
+
+    jsonl 版的 `self._lock` 只能挡住同一个进程内的并发。多 worker（uvicorn
+    --workers、多容器）同时收到同一笔退款重试时，两边都读不到对方的幂等键，
+    会各写一条事实 —— 钱就退两次。这里用 `idem_key UNIQUE` + `BEGIN IMMEDIATE`
+    把互斥交给存储层，进程内锁只作为降低冲突的优化。
+
+    其余语义（状态机、事件重放、补偿回滚）与 jsonl 版完全一致，两边接口相同。
+    """
+
+    def __init__(self, path: Path):
+        self.path = path
+        self._lock = threading.Lock()
+        self._seq = 0
+        self._idem: dict[str, LedgerRecord] = {}
+        self._state: dict[str, dict] = {}
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self._conn = sqlite3.connect(str(self.path), check_same_thread=False, timeout=10.0)
+        self._conn.execute("PRAGMA journal_mode=WAL")
+        self._conn.execute("PRAGMA busy_timeout=10000")
+        self._conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS ledger_events (
+                seq       INTEGER PRIMARY KEY AUTOINCREMENT,
+                ts        REAL    NOT NULL,
+                action    TEXT    NOT NULL,
+                order_id  TEXT    NOT NULL,
+                idem_key  TEXT    NOT NULL UNIQUE,
+                payload   TEXT    NOT NULL
+            )
+            """
+        )
+        self._conn.commit()
+        self._load()
+
+    def _load(self) -> None:
+        rows = self._conn.execute(
+            "SELECT seq, ts, action, order_id, idem_key, payload FROM ledger_events ORDER BY seq"
+        ).fetchall()
+        for seq, ts, action, order_id, idem_key, payload in rows:
+            record = LedgerRecord(
+                seq=seq,
+                ts=ts,
+                action=action,
+                order_id=order_id,
+                idem_key=idem_key,
+                payload=json.loads(payload),
+            )
+            self._seq = max(self._seq, record.seq)
+            self._idem[record.idem_key] = record
+            self._apply_to_state(record)
+
+    def apply(
+        self,
+        action: str,
+        order_id: str,
+        idem_key: str,
+        payload: dict | None = None,
+        base_status: str | None = None,
+    ) -> tuple[LedgerRecord | None, str | None, bool]:
+        if action not in TRANSITIONS:
+            return None, f"unknown_action:{action}", False
+
+        with self._lock:
+            self._conn.execute("BEGIN IMMEDIATE")
+            try:
+                row = self._conn.execute(
+                    "SELECT seq, ts, action, order_id, idem_key, payload "
+                    "FROM ledger_events WHERE idem_key = ?",
+                    (idem_key,),
+                ).fetchone()
+                if row is not None:
+                    self._conn.execute("ROLLBACK")
+                    existing = self._idem.get(idem_key) or LedgerRecord(
+                        seq=row[0],
+                        ts=row[1],
+                        action=row[2],
+                        order_id=row[3],
+                        idem_key=row[4],
+                        payload=json.loads(row[5]),
+                    )
+                    self._idem[idem_key] = existing
+                    return existing, None, True
+
+                current = (self._state.get(order_id) or {}).get("status") or base_status
+                if current is None:
+                    self._conn.execute("ROLLBACK")
+                    return None, "order_not_found", False
+                if current not in TRANSITIONS[action]:
+                    self._conn.execute("ROLLBACK")
+                    return None, f"illegal_transition:{current}->{action}", False
+
+                self._seq += 1
+                record = LedgerRecord(
+                    seq=self._seq,
+                    ts=time.time(),
+                    action=action,
+                    order_id=order_id,
+                    idem_key=idem_key,
+                    payload={**(payload or {}), "prev_status": current},
+                )
+                try:
+                    self._conn.execute(
+                        "INSERT INTO ledger_events (seq, ts, action, order_id, idem_key, payload) "
+                        "VALUES (?, ?, ?, ?, ?, ?)",
+                        (
+                            record.seq,
+                            record.ts,
+                            record.action,
+                            record.order_id,
+                            record.idem_key,
+                            json.dumps(record.payload, ensure_ascii=False),
+                        ),
+                    )
+                except sqlite3.IntegrityError:
+                    # 另一个进程抢先写入了同一个幂等键：以对方的事实为准
+                    self._conn.execute("ROLLBACK")
+                    existing = self.find(idem_key)
+                    return existing, None, True
+                self._conn.execute("COMMIT")
+                self._idem[idem_key] = record
+                self._apply_to_state(record)
+                return record, None, False
+            except Exception:
+                self._conn.execute("ROLLBACK")
+                raise
+
+    def close(self) -> None:
+        self._conn.close()
+
+
+def build_ledger(path: Path) -> OrderLedger:
+    """按文件后缀选后端：.db/.sqlite 走 SQLite，其余走 jsonl。"""
+    return SqliteLedger(path) if path.suffix in (".db", ".sqlite") else OrderLedger(path)
