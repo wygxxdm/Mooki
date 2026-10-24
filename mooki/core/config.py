@@ -30,7 +30,8 @@ class Settings(BaseSettings):
     price_out_per_1k: float = 0.0
 
     # ---------- Embedding ----------
-    embed_backend: str = "lsa"  # lsa | hashing
+    embed_backend: str = "lsa"  # lsa | hashing | bge（本地 ONNX 语义模型）
+    embed_local_model: str = "BAAI/bge-small-zh-v1.5"
     embed_base_url: str = ""
     embed_api_key: str = ""
     embed_model: str = "text-embedding-3-small"

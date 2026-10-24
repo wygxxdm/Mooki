@@ -9,3 +9,7 @@ langgraph>=0.2
 # 可选：生产部署时启用
 # redis>=5.0
 # chromadb>=0.5
+
+# 可选：本地语义向量后端（MOOKI_EMBED_BACKEND=bge）。体积较大且首次要下模型，
+# 所以不放进默认依赖；离线评测与 CI 只用 lsa/hashing。
+# fastembed>=0.4

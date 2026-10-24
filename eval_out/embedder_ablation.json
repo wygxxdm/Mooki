@@ -1,0 +1,53 @@
+{
+  "hashing-512": {
+    "direct": {
+      "recall@1": 0.3285,
+      "recall@5": 0.6861,
+      "ndcg@5": 0.5167
+    },
+    "bm25": {
+      "recall@1": 0.5036,
+      "recall@5": 0.8321,
+      "ndcg@5": 0.6801
+    },
+    "full": {
+      "recall@1": 0.5839,
+      "recall@5": 0.8613,
+      "ndcg@5": 0.7259
+    }
+  },
+  "lsa-128": {
+    "direct": {
+      "recall@1": 0.4599,
+      "recall@5": 0.7591,
+      "ndcg@5": 0.6191
+    },
+    "bm25": {
+      "recall@1": 0.5036,
+      "recall@5": 0.8321,
+      "ndcg@5": 0.6801
+    },
+    "full": {
+      "recall@1": 0.5474,
+      "recall@5": 0.8613,
+      "ndcg@5": 0.712
+    }
+  },
+  "bge-small-zh": {
+    "direct": {
+      "recall@1": 0.7445,
+      "recall@5": 0.9416,
+      "ndcg@5": 0.8584
+    },
+    "bm25": {
+      "recall@1": 0.5036,
+      "recall@5": 0.8321,
+      "ndcg@5": 0.6801
+    },
+    "full": {
+      "recall@1": 0.635,
+      "recall@5": 0.9416,
+      "ndcg@5": 0.7985
+    }
+  }
+}

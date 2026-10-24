@@ -52,7 +52,7 @@ load_context → intent → plan → act → observe → respond
 ```bash
 pip install -r requirements.txt
 make index      # 建知识库索引（含向量化）
-make test       # 92 个单测
+make test       # 99 个单测
 make smoke      # 6 条典型链路，看输出
 make serve      # http://127.0.0.1:8000
 make eval       # 全部离线评测（检索/意图/端到端/多轮/规模）
@@ -99,7 +99,7 @@ mooki/
   eval/       指标、消融、留出实验、多轮会话断言、判分
 data/kb/      9 个知识域，134 条知识（其中 2 条已过期，用来验证时效过滤）
 scripts/      建索引、冒烟、评测、基准、并发压测、截图
-tests/        92 个单测
+tests/        99 个单测
 web/          轨迹面板，单文件
 ```
 
@@ -195,7 +195,7 @@ trace 会被存进内存、推到前端、导出做客诉复盘。用户随口�
 
 ## 评测
 
-八组实验，`make all` 能全部复现，报告落在 `eval_out/`。
+所有评测都能用 `make` 一条命令复现，报告落在 `eval_out/`（12 份，其中 3 份是在线跑的）。
 
 **先说一件不好看的事：换掉评测集之后，指标全线下跌。**
 
@@ -274,7 +274,21 @@ dev/test 漂移从 0.154 降到 0.038 —— 这是扩容最直接的收益：40
 
 **规模敏感性**：注入近重复变体从 134 涨到 439 条，全链路相对纯向量的优势在 +0.015 到 +0.029 之间波动，排序侧（NDCG）比覆盖侧衰减更早——干扰主要影响"该排第一的有没有排第一"，而不是"有没有进前五"。
 
-**向量后端**：LSA 与哈希在不同规模上互有胜负。这一项只有接真实 embedding 服务才有意义，`make embedder` 已经把三后端对比写好了，但目前 **API 后端没实跑过**，见"已知问题"。
+**向量后端**（`make embedder`，同一语料、同一流水线，只换 embedding）
+
+| 后端 | direct R@1 | direct R@5 | direct NDCG@5 | full R@5 | full−direct | full NDCG@5 |
+|---|---|---|---|---|---|---|
+| hashing-512 | 0.329 | 0.686 | 0.517 | 0.861 | +0.175 | 0.726 |
+| lsa-128（默认） | 0.460 | 0.759 | 0.619 | 0.861 | +0.102 | 0.712 |
+| **bge-small-zh（本地 ONNX）** | **0.745** | **0.942** | **0.858** | 0.942 | **+0.000** | 0.799 |
+
+这张表推翻了一句我原来很确定的话。之前写的是"架构带来的增益全在低重叠那一桶"，看起来像是链路本身的功劳；换上 bge-small-zh 之后 direct 一路上到 **R@5 0.942 / R@1 0.745**，而整条链路的增量直接归零，NDCG 还从 0.858 掉到 0.799——**改写、BM25、重排在强向量上变成了净负收益**。
+
+原因不复杂：离线改写是往查询里塞同义词，RRF 又把词法通道等权拉进来，向量已经够准时这些都是在加噪声。
+
+所以"架构价值"要重新表述：**这条链路是在补偿弱向量**。向量弱（hashing / lsa）时它值十几个点；向量强时它只会拖后腿。生产上应该按 embedding 质量决定链路深度，而不是无脑全开——这也是把链路做成可配置（`config_name`）的实际理由。
+
+默认仍用 `lsa`：离线评测要确定性、CI 不能依赖模型下载。想开语义向量就 `pip install fastembed` + `MOOKI_EMBED_BACKEND=bge`（首次拉 90MB 的 `bge-small-zh-v1.5`，国内网络加 `HF_ENDPOINT=https://hf-mirror.com`），改完 `make index` 重建。索引里记了建库时的 embedder，换了后端会自动重建，不会拿旧向量凑合。
 
 **在线模式**（`make eval-online`，DeepSeek-chat，n=24）
 
@@ -335,7 +349,7 @@ dev/test 漂移从 0.154 降到 0.038 —— 这是扩容最直接的收益：40
 
 ## 已知问题
 
-- **没有真实 embedding 服务**。`APIEmbedder` 写好了但没实跑过，报告里的向量通道全是 LSA（共现矩阵做 SVD）。接上 bge-m3 / text-embedding-3 之后要重跑 `make embedder` 才知道值不值。
+- **默认向量仍是 LSA**。本地 bge-small-zh 已经跑通并给出对比（见评测里的向量后端一节），但为了离线确定性和 CI 不依赖模型下载，默认没切过去；换生产要显式设 `MOOKI_EMBED_BACKEND=bge` 并 `make index`。远端 embedding（`APIEmbedder`）仍未实跑。
 - **在线结果不可复现**。`eval_out/online_eval.md` 与 `online_retrieval.md` 是 DeepSeek-chat 跑一次的结果，温度不为 0，重跑数字会变；它们的作用是给出绝对观感与成本量级，不是用来给配置排名的。
 - **离线替身是词袋模型**，和真实 LLM 的行为差距很大（同一条 query，真实模型意图置信度 0.89，朴素贝叶斯只有 0.3）。离线数字只能做相对比较，不能当线上效果。
 - **意图权重只按「在线/离线」二分**。代码现在按 `llm_offline` 二选一，但换到另一个模型（Qwen、GLM）权重未必还合适，正确做法是每换一次模型重跑 `make eval-intent-online` 校一遍。

@@ -4,6 +4,8 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
+import numpy as np
+
 from mooki.core.config import Settings
 from mooki.core.embedder import Embedder
 from mooki.rag.bm25 import BM25Index
@@ -78,6 +80,12 @@ def build_index(settings: Settings, embedder: Embedder) -> IndexBundle:
         json.dumps([c.__dict__ for c in chunks], ensure_ascii=False), encoding="utf-8"
     )
     store.persist()
+    # 记住这份向量是哪个 embedder 建的：换后端必须重建索引，
+    # 否则查询向量与库里向量不在一个空间，轻则答非所问，重则维度对不上直接崩。
+    (index_dir / "embedder.json").write_text(
+        json.dumps({"name": embedder.name, "dim": int(np.asarray(vectors).shape[1])}, ensure_ascii=False),
+        encoding="utf-8",
+    )
     if hasattr(embedder, "save"):
         embedder.save(index_dir)
     return IndexBundle(chunks=chunks, chunk_map={c.chunk_id: c for c in chunks}, bm25=bm25, store=store)
@@ -89,6 +97,17 @@ def load_index(settings: Settings, embedder: Embedder) -> IndexBundle:
     chunks_path = index_dir / "chunks.json"
     if not bm25_path.exists() or not chunks_path.exists():
         return build_index(settings, embedder)
+
+    # 后端不一致就别硬用旧向量。这条尤其容易踩：本地试完 bge 忘了切回来，
+    # 离线评测就会拿 bge 的向量配 LSA 的查询向量，指标凭空变化还查不出原因。
+    meta_path = index_dir / "embedder.json"
+    if meta_path.exists():
+        try:
+            meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            meta = {}
+        if meta.get("name") and meta["name"] != embedder.name:
+            return build_index(settings, embedder)
 
     rows = json.loads(chunks_path.read_text(encoding="utf-8"))
     chunks = [Chunk(**row) for row in rows]

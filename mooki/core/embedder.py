@@ -9,8 +9,11 @@
    为什么不用哈希向量：hashing 只是把词袋随机投影到固定维度，本质仍是词法匹配，
    和 BM25 同源 —— 两路同源的 RRF 融合没有信息增益，hybrid 实验就是自欺。
 
-2. `APIEmbedder` —— 接真实 embedding 服务（OpenAI 兼容协议）。
-3. `HashingEmbedder` —— 兜底，供单测与无 fit 场景使用。
+2. `FastEmbedEmbedder` —— 本地 ONNX 中文语义模型（默认 bge-small-zh-v1.5），
+   不联网、不需要 key，跑完一次下载就离线可用。这是接真实语义向量的最低成本方式，
+   也是"LSA 不是真语义模型"这条已知局限的对照实现。
+3. `APIEmbedder` —— 接远端 embedding 服务（OpenAI 兼容协议）。
+4. `HashingEmbedder` —— 兜底，供单测与无 fit 场景使用。
 
 三者对上层完全等价：只要满足 `fit(可选) + embed`，检索代码不改一行。
 """
@@ -192,6 +195,38 @@ class LSAEmbedder:
         return True
 
 
+class FastEmbedEmbedder:
+    """本地 ONNX 语义向量（fastembed + bge-small-zh-v1.5）。
+
+    相比 LSA 的差别不是"更准一点"，而是换了一个假设空间：LSA 只见过语料里的共现，
+    语料外的同义表达（"钱还没回来" ↔ "退款到账时效"）靠的是词面碰巧重合；
+    bge 是在通用中文语料上预训练的，跨表述的语义相似度是它本来就有的能力。
+
+    首次使用会从 HF 镜像下载约 90MB 模型，之后离线可用。
+    """
+
+    def __init__(self, model_name: str = "BAAI/bge-small-zh-v1.5"):
+        try:
+            from fastembed import TextEmbedding
+        except ImportError as exc:  # pragma: no cover - 缺依赖时给出可执行的提示
+            raise RuntimeError(
+                "未安装 fastembed。先 pip install fastembed，或把 MOOKI_EMBED_BACKEND 换回 lsa。"
+            ) from exc
+        self._model = TextEmbedding(model_name=model_name)
+        self.name = f"fastembed:{model_name.split('/')[-1]}"
+        self.dim = 0  # 首次 embed 后回填，避免硬编码各模型维度
+
+    def fit(self, texts: list[str]) -> None:  # 预训练模型无需本地 fit
+        return None
+
+    def embed(self, texts: list[str]) -> np.ndarray:
+        mat = np.asarray(list(self._model.embed(texts)), dtype=np.float32)
+        self.dim = mat.shape[1]
+        norms = np.linalg.norm(mat, axis=1, keepdims=True)
+        norms[norms == 0] = 1.0
+        return mat / norms
+
+
 class APIEmbedder:
     def __init__(self, settings: Settings):
         import httpx
@@ -226,6 +261,8 @@ def build_embedder(settings: Settings) -> Embedder:
         return APIEmbedder(settings)
     if settings.embed_backend == "hashing":
         return HashingEmbedder(settings.embed_dim)
+    if settings.embed_backend in ("bge", "fastembed", "local"):
+        return FastEmbedEmbedder(settings.embed_local_model)
     return LSAEmbedder(dim=settings.embed_dim)
 
 
@@ -240,4 +277,4 @@ def clone_unfitted(embedder: Embedder) -> Embedder:
         return LSAEmbedder(dim=embedder.target_dim, min_df=1)
     if isinstance(embedder, HashingEmbedder):
         return HashingEmbedder(embedder.dim)
-    return embedder  # 远端 embedding 服务不需要本地 fit，直接复用
+    return embedder  # 预训练 / 远端模型不需要本地 fit，直接复用

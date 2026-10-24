@@ -5,7 +5,8 @@
 
 用法：
     python -m scripts.embedder_ablation
-    python -m scripts.embedder_ablation --api   # 需要 .env 里配好 MOOKI_EMBED_BASE_URL
+    python -m scripts.embedder_ablation --api       # 需要 .env 里配好 MOOKI_EMBED_BASE_URL
+    python -m scripts.embedder_ablation --no-local  # 不跑本地 bge（没装 fastembed 时）
 """
 
 from __future__ import annotations
@@ -18,7 +19,7 @@ import numpy as np
 
 from mooki.core.cache import TTLCache
 from mooki.core.config import Settings
-from mooki.core.embedder import APIEmbedder, LSAEmbedder, HashingEmbedder
+from mooki.core.embedder import APIEmbedder, FastEmbedEmbedder, HashingEmbedder, LSAEmbedder
 from mooki.eval.retrieval_eval import run_ablation
 from mooki.graph.runtime import AgentRuntime
 from mooki.rag.bm25 import BM25Index
@@ -27,7 +28,7 @@ from mooki.rag.retriever import Retriever
 from mooki.rag.rewrite import QueryRewriter
 from mooki.rag.vector_store import LocalVectorStore
 
-OUT_DIR = Path(__file__).resolve().parent.parent.parent / "eval_out"
+OUT_DIR = Path(__file__).resolve().parent.parent / "eval_out"
 CONFIGS = ("direct", "bm25", "full")
 
 
@@ -67,6 +68,11 @@ def main(argv: list[str]) -> int:
     ]
     if "--api" in argv and settings.embed_base_url:
         backends.append(("api", APIEmbedder(settings)))
+    if "--no-local" not in argv:
+        try:
+            backends.append(("bge-small-zh", FastEmbedEmbedder(settings.embed_local_model)))
+        except Exception as exc:  # noqa: BLE001 - 没装 fastembed 就跳过，不影响其它后端
+            print(f"跳过本地语义模型：{exc}", file=sys.stderr)
 
     rows: dict[str, dict] = {}
     for name, embedder in backends:
@@ -84,19 +90,26 @@ def main(argv: list[str]) -> int:
     lines = [
         "## 实验七 · 向量后端对比（同一语料、同一流水线，只换 embedding）",
         "",
-        "| 后端 | direct R@5 | bm25 R@5 | full R@5 | full-direct | full NDCG@5 |",
-        "|---|---|---|---|---|---|",
+        "| 后端 | direct R@1 | direct R@5 | direct NDCG@5 | full R@5 | full-direct | full NDCG@5 |",
+        "|---|---|---|---|---|---|---|",
     ]
     for name, data in rows.items():
         gap = data["full"]["recall@5"] - data["direct"]["recall@5"]
         lines.append(
-            f"| {name} | {data['direct']['recall@5']:.4f} | {data['bm25']['recall@5']:.4f} "
-            f"| {data['full']['recall@5']:.4f} | {gap:+.4f} | {data['full']['ndcg@5']:.4f} |"
+            f"| {name} | {data['direct']['recall@1']:.4f} | {data['direct']['recall@5']:.4f} "
+            f"| {data['direct']['ndcg@5']:.4f} | {data['full']['recall@5']:.4f} "
+            f"| {gap:+.4f} | {data['full']['ndcg@5']:.4f} |"
         )
     lines.append("")
     lines.append(
-        "> direct 一列直接反映 embedding 质量：它只走向量、不改写不重排。"
-        "换真实 embedding 服务后重跑本脚本即可验证——**这也是把「已知局限」变成「可复测项」的做法**。"
+        "> direct 三列直接反映 embedding 质量：它只走向量、不改写不重排。"
+        "full-direct 是整条链路（改写 + BM25 + RRF + 重排）在这套向量上的增量。"
+    )
+    lines.append("")
+    lines.append(
+        "> 读法：向量够强时 direct 已经接近上限，full 加不动（增量趋近 0）——"
+        "说明这条链路原本是在补偿弱向量，不是永远必要。"
+        "向量弱时（hashing / lsa）增量才有十几个点，那才是「架构价值」的真实来源。"
     )
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
