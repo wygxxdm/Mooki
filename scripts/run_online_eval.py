@@ -30,9 +30,8 @@ OUT_DIR = ROOT / "eval_out"
 DIALOGUE = ROOT / "mooki" / "eval" / "golden" / "dialogue.jsonl"
 RETRIEVAL = ROOT / "mooki" / "eval" / "golden" / "retrieval.jsonl"
 
-# 粗略单价（元 / 千 token），只用于给出量级感，别当账用
-PRICE_IN_PER_1K = 0.001
-PRICE_OUT_PER_1K = 0.002
+# 单价从配置读（MOOKI_PRICE_IN_PER_1K / MOOKI_PRICE_OUT_PER_1K），
+# 没配就按 0 报，避免拿拍脑袋的数字当账单。
 
 
 def _load_jsonl(path: Path) -> list[dict]:
@@ -101,7 +100,10 @@ def main() -> int:
     usage = runtime.llm.usage()
     prompt_tokens = usage.get("prompt_tokens", 0)
     completion_tokens = usage.get("completion_tokens", 0)
-    cost = prompt_tokens / 1000 * PRICE_IN_PER_1K + completion_tokens / 1000 * PRICE_OUT_PER_1K
+    cost = (
+        prompt_tokens / 1000 * settings.price_in_per_1k
+        + completion_tokens / 1000 * settings.price_out_per_1k
+    )
     scores = [d["score"] for d in details]
 
     report = {

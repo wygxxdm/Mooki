@@ -53,10 +53,21 @@ try:  # 优先用真正的 LangGraph
     from langgraph.graph import END, StateGraph
 
     GRAPH_ENGINE = "langgraph"
+    HAS_LANGGRAPH = True
 except Exception:  # noqa: BLE001 - 未安装时退回等价最小实现，保证可离线运行
     from mooki.graph.mini_graph import END, StateGraph
 
     GRAPH_ENGINE = "mini"
+    HAS_LANGGRAPH = False
+
+try:  # 人工接管所需：中断 + 恢复指令 + 检查点
+    from langgraph.checkpoint.memory import MemorySaver
+    from langgraph.checkpoint.serde.jsonplus import JsonPlusSerializer
+    from langgraph.types import Command, interrupt
+
+    HAS_INTERRUPT = True
+except Exception:  # noqa: BLE001 - 没有就退化为"建单即返回"，不阻断主链路
+    HAS_INTERRUPT = False
 
 
 # 会改变外部状态的写操作。规划层对它们做幂等拦截，避免多轮追问重放。
@@ -94,6 +105,26 @@ class AgentRuntime:
         self.registry = build_registry(s, self.tool_cache, self.services)
         self.trace = trace_store
 
+        # 人工接管：只有 LangGraph + 显式开启时才挂检查点。
+        # 默认关 —— 人工不在线时把用户挂住，比直接建单转交更糟。
+        self.interrupt_enabled = bool(s.enable_human_interrupt and HAS_INTERRUPT and HAS_LANGGRAPH)
+        # 检查点里存的是我们自己的 Pydantic 类型（IntentResult / Urgency…），
+        # 默认序列化器会告警并说未来版本要拒绝，所以显式放行这几个模块。
+        self.checkpointer = (
+            MemorySaver(
+                serde=JsonPlusSerializer(
+                    allowed_msgpack_modules=[
+                        ("mooki.core.schema", "Intent"),
+                        ("mooki.core.schema", "Urgency"),
+                        ("mooki.core.schema", "VoteSource"),
+                        ("mooki.core.schema", "IntentResult"),
+                        ("mooki.core.schema", "Vote"),
+                    ]
+                )
+            )
+            if self.interrupt_enabled
+            else None
+        )
         self.graph = self._build_graph()
 
     # ---------- 图构建 ----------
@@ -135,6 +166,8 @@ class AgentRuntime:
         graph.add_edge("clarify", "persist")
         graph.add_edge("handoff", "persist")
         graph.add_edge("persist", END)
+        if self.checkpointer is not None:
+            return graph.compile(checkpointer=self.checkpointer)
         return graph.compile()
 
     # ---------- 路由 ----------
@@ -533,6 +566,35 @@ class AgentRuntime:
         )
         ticket = result.data if isinstance(result.data, dict) else {}
         eta = "2 小时" if intent.urgency is Urgency.P0 else "24 小时"
+
+        if self.interrupt_enabled:
+            # 挂起，把工单交给人工；专员处理完调 /api/handoff/resume 把答复送回来。
+            # 这里是 LangGraph 唯一「必须它来做」的地方：mini_graph 没有检查点，
+            # 进程一重启上下文就没了，做不了暂停—恢复。
+            self.trace.emit(
+                state["trace_id"],
+                "handoff",
+                "handoff",
+                {
+                    "ticket_id": ticket.get("ticket_id"),
+                    "urgency": intent.urgency.value,
+                    "ok": result.ok,
+                    "paused": True,
+                    "summary": summary,
+                },
+            )
+            human = interrupt(
+                {
+                    "ticket_id": ticket.get("ticket_id"),
+                    "urgency": intent.urgency.value,
+                    "summary": summary,
+                    "eta": eta,
+                    "reason": "awaiting_human",
+                }
+            )
+            reply = str(human).strip() if human else f"工单 {ticket.get('ticket_id')} 已由专员处理完毕。"
+            return {"reply": reply, "handoff": {**ticket, "resumed": True}}
+
         reply = (
             f"已为你转接人工客服并创建工单 {ticket.get('ticket_id', '（生成中）')}，"
             f"预计 {eta}内与你联系。你的问题我已完整记录，无需重复描述。"
@@ -594,8 +656,13 @@ class AgentRuntime:
             "iterations": 0,
             "degraded": [],
         }
+        # 有检查点时用 trace_id 当 thread_id：每次请求都是一个独立 run，
+        # 不会把上一轮的 tool_results 合并进来；resume 时用同一个 thread_id 找回来。
+        config: dict[str, Any] = {"recursion_limit": 25}
+        if self.checkpointer is not None:
+            config["configurable"] = {"thread_id": trace_id}
         try:
-            final = self.graph.invoke(state, config={"recursion_limit": 25})
+            final = self.graph.invoke(state, config=config)
         except Exception as exc:  # noqa: BLE001
             self.trace.emit(trace_id, "error", payload={"error": f"{type(exc).__name__}: {exc}"})
             final = {
@@ -603,16 +670,23 @@ class AgentRuntime:
                 "degraded": (state.get("degraded") or []) + ["graph:crash"],
             }
 
+        paused = self._interrupt_payload(final)
         duration = int((time.time() - started) * 1000)
         intent = final.get("intent")
         response = ChatResponse(
             trace_id=trace_id,
             session_id=request.session_id,
-            reply=final.get("reply", ""),
+            reply=(
+                f"已为你创建工单 {paused.get('ticket_id', '')} 并转接人工客服，"
+                f"专员会在这里直接回复你。"
+                if paused
+                else final.get("reply", "")
+            ),
             intent=intent if intent else None,
             tools_used=[r["name"] for r in final.get("tool_results") or []],
             degraded=bool(final.get("degraded")),
-            handoff=final.get("handoff"),
+            handoff=paused or final.get("handoff"),
+            waiting_human=bool(paused),
             citations=final.get("citations") or [],
             usage={
                 "latency_ms": duration,
@@ -635,13 +709,68 @@ class AgentRuntime:
             },
         )
         self.trace.emit(trace_id, "usage", payload=response.usage, latency_ms=duration)
+        self.trace.metrics.observe("e2e", duration)
         return response
 
+    # ---------- 人工接管 ----------
+
+    @staticmethod
+    def _interrupt_payload(final: Any) -> dict:
+        """从 invoke 的返回里取中断载荷。没有中断就是空 dict。"""
+        if not isinstance(final, dict):
+            return {}
+        pending = final.get("__interrupt__")
+        if not pending:
+            return {}
+        first = pending[0] if isinstance(pending, (list, tuple)) else pending
+        value = getattr(first, "value", None)
+        return value if isinstance(value, dict) else {"reason": "awaiting_human"}
+
+    def resume(self, trace_id: str, message: str) -> ChatResponse:
+        """人工专员接管后把答复送回挂起的 run。
+
+        同一个 thread_id 才能找回检查点；没有开启接管时直接报错，而不是静默返回空答复。
+        """
+        if self.checkpointer is None:
+            raise RuntimeError("human_interrupt_disabled")
+        config = {"recursion_limit": 25, "configurable": {"thread_id": trace_id}}
+        final = self.graph.invoke(Command(resume=message), config=config)
+        intent = final.get("intent")
+        self.trace.emit(
+            trace_id,
+            "human_resume",
+            "resume",
+            {"reply_preview": (message or "")[:120], "ticket_id": (final.get("handoff") or {}).get("ticket_id")},
+        )
+        return ChatResponse(
+            trace_id=trace_id,
+            session_id=final.get("session_id", ""),
+            reply=final.get("reply", message),
+            intent=intent if intent else None,
+            tools_used=[r["name"] for r in final.get("tool_results") or []],
+            degraded=bool(final.get("degraded")),
+            handoff=final.get("handoff"),
+            waiting_human=False,
+            citations=final.get("citations") or [],
+            usage={"engine": GRAPH_ENGINE, "resumed": True},
+        )
+
     def stats(self) -> dict[str, Any]:
+        """运行指标。延迟与成本都要能用，否则只能看吞吐不能看账。"""
+        s = self.settings
+        cost = (
+            self.llm.prompt_tokens / 1000 * s.price_in_per_1k
+            + self.llm.completion_tokens / 1000 * s.price_out_per_1k
+        )
         return {
             "engine": GRAPH_ENGINE,
-            "llm": {"calls": self.llm.calls, "prompt_tokens": self.llm.prompt_tokens,
-                    "completion_tokens": self.llm.completion_tokens},
+            "llm": {
+                "calls": self.llm.calls,
+                "prompt_tokens": self.llm.prompt_tokens,
+                "completion_tokens": self.llm.completion_tokens,
+                "est_cost_cny": round(cost, 4),
+                "price_configured": bool(s.price_in_per_1k or s.price_out_per_1k),
+            },
             "intent_cache": self.intent_cache.stats.as_dict(),
             "retrieval_cache": self.retrieval_cache.stats.as_dict(),
             "tool_cache": self.tool_cache.stats.as_dict(),

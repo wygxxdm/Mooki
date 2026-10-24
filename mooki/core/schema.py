@@ -122,6 +122,11 @@ class ChatRequest(BaseModel):
     user_id: str = "u_1001"
 
 
+class HandoffResumeRequest(BaseModel):
+    trace_id: str
+    message: str
+
+
 class ChatResponse(BaseModel):
     trace_id: str
     session_id: str
@@ -130,6 +135,7 @@ class ChatResponse(BaseModel):
     tools_used: list[str] = Field(default_factory=list)
     degraded: bool = False
     handoff: dict[str, Any] | None = None
+    waiting_human: bool = False  # 已挂起，等人工接管后调 /api/handoff/resume
     citations: list[dict[str, Any]] = Field(default_factory=list)
     usage: dict[str, Any] = Field(default_factory=dict)
 

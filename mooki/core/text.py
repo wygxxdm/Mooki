@@ -48,3 +48,38 @@ def truncate_tokens(text: str, budget: int) -> str:
     ratio = budget / max(estimate_tokens(text), 1)
     cut = max(1, int(len(text) * ratio) - 2)
     return text[:cut].rstrip() + "…"
+
+
+# ---------- PII 脱敏 ----------
+# trace 会被存下来、推到前端、导出给客诉复盘。手机号和证件号不该跟着跑一路。
+_PHONE = re.compile(r"(?<!\d)(1[3-9]\d)\d{4}(\d{4})(?!\d)")
+_ID_CARD = re.compile(r"(?<!\d)(\d{6})\d{8}(\d{3}[\dXx])(?!\d)")
+_BANK_CARD = re.compile(r"(?<!\d)(\d{4})\d{8,11}(\d{4})(?!\d)")
+_EMAIL = re.compile(r"([A-Za-z0-9._%+-])[A-Za-z0-9._%+-]*@([A-Za-z0-9.-]+\.[A-Za-z]{2,})")
+
+
+def redact_pii(text: str) -> str:
+    """把手机号、身份证、银行卡、邮箱打码，保留首尾便于人工核对。
+
+    订单号（SO 开头）不动 —— 它是排查必须的定位信息，不属于个人信息。
+    地址不在这里处理：中文地址没有稳定模式，硬匹配会把"XX 路 3 号"这类
+    正常描述一起打掉，宁可在采集侧就不收整段地址。
+    """
+    if not text:
+        return text
+    text = _PHONE.sub(r"\1****\2", text)
+    text = _ID_CARD.sub(r"\1********\2", text)
+    text = _BANK_CARD.sub(r"\1********\2", text)
+    text = _EMAIL.sub(r"\1***@\2", text)
+    return text
+
+
+def redact_deep(value):
+    """递归脱敏：trace payload 是嵌套 dict/list，只在最外层替换不够。"""
+    if isinstance(value, str):
+        return redact_pii(value)
+    if isinstance(value, dict):
+        return {k: redact_deep(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [redact_deep(v) for v in value]
+    return value

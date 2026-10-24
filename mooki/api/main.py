@@ -19,7 +19,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, StreamingResponse
 
 from mooki.core.observability import trace_store
-from mooki.core.schema import ChatRequest, ChatResponse, new_id
+from mooki.core.schema import ChatRequest, ChatResponse, HandoffResumeRequest, new_id
 from mooki.graph.runtime import GRAPH_ENGINE, get_runtime
 
 ROOT = Path(__file__).resolve().parent.parent.parent
@@ -106,6 +106,22 @@ def chat_stream(request: ChatRequest) -> StreamingResponse:
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )
+
+
+@app.post("/api/handoff/resume", response_model=ChatResponse)
+def resume_handoff(req: HandoffResumeRequest) -> ChatResponse:
+    """人工专员接管后把答复送回挂起的 run。
+
+    只有开启 MOOKI_ENABLE_HUMAN_INTERRUPT 并且用 LangGraph 时才有挂起的 run，
+    否则返回 409，而不是假装成功。
+    """
+    runtime = get_runtime()
+    if not getattr(runtime, "interrupt_enabled", False):
+        raise HTTPException(status_code=409, detail="human_interrupt_disabled")
+    try:
+        return runtime.resume(req.trace_id, req.message)
+    except RuntimeError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
 @app.get("/api/trace/{trace_id}")

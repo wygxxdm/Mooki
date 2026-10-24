@@ -17,6 +17,7 @@ from contextlib import contextmanager
 from typing import Any, Iterator
 
 from mooki.core.schema import TraceEvent, new_id, now_ms
+from mooki.core.text import redact_deep
 
 _MAX_EVENTS_PER_TRACE = 500
 
@@ -97,8 +98,14 @@ class TraceStore:
         payload: dict[str, Any] | None = None,
         latency_ms: int | None = None,
     ) -> TraceEvent:
+        # 统一在写入口脱敏：面板、SSE、导出、复盘读的都是这一份，
+        # 只在一个出口打码迟早会漏（比如后来加了个导出接口）。
         event = TraceEvent(
-            trace_id=trace_id, type=type_, node=node, payload=payload or {}, latency_ms=latency_ms
+            trace_id=trace_id,
+            type=type_,
+            node=node,
+            payload=redact_deep(payload or {}),
+            latency_ms=latency_ms,
         )
         with self._lock:
             bucket = self._events.setdefault(trace_id, [])

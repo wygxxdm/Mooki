@@ -3,12 +3,12 @@
   "mean_score": 3.25,
   "median_score": 3.0,
   "pass_rate": 0.4583,
-  "keyword_pass_rate": 0.6667,
+  "keyword_pass_rate": 0.625,
   "judge_keyword_conflict": [
     "d01"
   ],
   "degraded_rate": 0.0,
-  "p95_latency_ms": 19,
+  "p95_latency_ms": 12,
   "details": [
     {
       "id": "d01",
@@ -29,12 +29,12 @@
         "logistics.track"
       ],
       "degraded": false,
-      "latency_ms": 11
+      "latency_ms": 10
     },
     {
       "id": "d02",
       "message": "SO20261018006 我不想要了，能退款吗",
-      "reply": "已为你核实：退款判断：可退，可退金额 139.0 元，阻断项 无，签收至今 3 天，退款单号 RF03E2F30CB0，当前状态 refund_pending；订单 SO20261018006：状态 已完成，商品 便携榨汁杯 400ml，实付 139.0 元，下单 2026-10-18 09:12:00，签收 2026-10-20 15:41:00。",
+      "reply": "已为你核实：退款判断：可退，可退金额 139.0 元，阻断项 无，签收至今 3 天，退款单号 RF1C6FE0B232，当前状态 refund_pending；订单 SO20261018006：状态 已完成，商品 便携榨汁杯 400ml，实付 139.0 元，下单 2026-10-18 09:12:00，签收 2026-10-20 15:41:00。",
       "score": 2,
       "judge_reason": "参考要点覆盖率 0.23",
       "must_have": [
@@ -52,7 +52,7 @@
         "kb.search"
       ],
       "degraded": false,
-      "latency_ms": 19
+      "latency_ms": 14
     },
     {
       "id": "d03",
@@ -94,7 +94,7 @@
         "kb.search"
       ],
       "degraded": false,
-      "latency_ms": 7
+      "latency_ms": 6
     },
     {
       "id": "d05",
@@ -134,7 +134,7 @@
         "kb.search"
       ],
       "degraded": false,
-      "latency_ms": 9
+      "latency_ms": 6
     },
     {
       "id": "d07",
@@ -154,7 +154,7 @@
         "kb.search"
       ],
       "degraded": false,
-      "latency_ms": 9
+      "latency_ms": 7
     },
     {
       "id": "d08",
@@ -174,12 +174,12 @@
         "kb.search"
       ],
       "degraded": false,
-      "latency_ms": 9
+      "latency_ms": 7
     },
     {
       "id": "d09",
       "message": "再不给我解决我就去12315投诉",
-      "reply": "已为你转接人工客服并创建工单 TK81903D8703，预计 2 小时内与你联系。你的问题我已完整记录，无需重复描述。",
+      "reply": "已为你转接人工客服并创建工单 TKB149A0EB27，预计 2 小时内与你联系。你的问题我已完整记录，无需重复描述。",
       "score": 4,
       "judge_reason": "参考要点覆盖率 0.43",
       "must_have": [
@@ -192,7 +192,7 @@
       "intent": "complaint",
       "tools": [],
       "degraded": false,
-      "latency_ms": 6
+      "latency_ms": 5
     },
     {
       "id": "d10",
@@ -212,7 +212,7 @@
         "kb.search"
       ],
       "degraded": false,
-      "latency_ms": 7
+      "latency_ms": 8
     },
     {
       "id": "d11",
@@ -232,7 +232,7 @@
         "kb.search"
       ],
       "degraded": false,
-      "latency_ms": 7
+      "latency_ms": 6
     },
     {
       "id": "d12",
@@ -252,12 +252,12 @@
         "kb.search"
       ],
       "degraded": false,
-      "latency_ms": 9
+      "latency_ms": 7
     },
     {
       "id": "d13",
       "message": "SO20260520003 我后悔了不想要了",
-      "reply": "已为你核实：退款判断：可退，可退金额 409.0 元，阻断项 无，签收至今 None 天，退款单号 RF7FDFBB74FC，当前状态 refund_pending；订单 SO20260520003：状态 待发货，商品 机械键盘 K8，实付 409.0 元，下单 2026-05-20 11:15:00，签收 未签收。按平台规则，退换货解决的是\"不想要\"或\"到货即有问题\"，保修解决的是\"使用过程中出现故障\"。已超过 7 天但未超过保修期的故障，走保修流程（维修或换新），不走退货。",
+      "reply": "已为你核实：退款判断：可退，可退金额 409.0 元，阻断项 无，签收至今 None 天，退款单号 RF62AA9342AF，当前状态 refund_pending；订单 SO20260520003：状态 待发货，商品 机械键盘 K8，实付 409.0 元，下单 2026-05-20 11:15:00，签收 未签收。按平台规则，退换货解决的是\"不想要\"或\"到货即有问题\"，保修解决的是\"使用过程中出现故障\"。已超过 7 天但未超过保修期的故障，走保修流程（维修或换新），不走退货。",
       "score": 2,
       "judge_reason": "参考要点覆盖率 0.20",
       "must_have": [
@@ -275,7 +275,7 @@
         "kb.search"
       ],
       "degraded": false,
-      "latency_ms": 19
+      "latency_ms": 12
     },
     {
       "id": "d14",
@@ -313,7 +313,7 @@
         "kb.search"
       ],
       "degraded": false,
-      "latency_ms": 8
+      "latency_ms": 7
     },
     {
       "id": "d16",
@@ -369,7 +369,7 @@
         "kb.search"
       ],
       "degraded": false,
-      "latency_ms": 9
+      "latency_ms": 7
     },
     {
       "id": "d19",
@@ -389,7 +389,7 @@
         "kb.search"
       ],
       "degraded": false,
-      "latency_ms": 9
+      "latency_ms": 7
     },
     {
       "id": "d20",
@@ -407,7 +407,7 @@
         "kb.search"
       ],
       "degraded": false,
-      "latency_ms": 10
+      "latency_ms": 8
     },
     {
       "id": "d21",
@@ -427,7 +427,7 @@
         "kb.search"
       ],
       "degraded": false,
-      "latency_ms": 7
+      "latency_ms": 8
     },
     {
       "id": "d22",
@@ -468,20 +468,18 @@
     {
       "id": "d24",
       "message": "我要投诉并且要求赔偿",
-      "reply": "已为你转接人工客服并创建工单 TK79F04A48BD，预计 2 小时内与你联系。你的问题我已完整记录，无需重复描述。",
+      "reply": "已为你转接人工客服并创建工单 TK305566E16D，预计 2 小时内与你联系。你的问题我已完整记录，无需重复描述。",
       "score": 1,
-      "judge_reason": "参考要点覆盖率 0.11",
+      "judge_reason": "参考要点覆盖率 0.08",
       "must_have": [
         "48"
       ],
-      "must_have_hit": [
-        "48"
-      ],
-      "keyword_pass": true,
+      "must_have_hit": [],
+      "keyword_pass": false,
       "intent": "complaint",
       "tools": [],
       "degraded": false,
-      "latency_ms": 6
+      "latency_ms": 7
     }
   ]
 }

@@ -25,6 +25,9 @@ class Settings(BaseSettings):
     llm_model: str = "qwen-plus"
     llm_timeout_s: float = 20.0
     llm_temperature: float = 0.1
+    # 成本估算单价（元 / 千 token）。默认 0 表示不估算，按实际服务商价格填。
+    price_in_per_1k: float = 0.0
+    price_out_per_1k: float = 0.0
 
     # ---------- Embedding ----------
     embed_backend: str = "lsa"  # lsa | hashing
@@ -54,6 +57,9 @@ class Settings(BaseSettings):
     intent_weight_llm: float = 0.25
     intent_weight_dense: float = 0.10
     intent_weight_rule: float = 0.65
+    # 转人工是否真的挂起等人工接管（需要 LangGraph checkpointer）。
+    # 默认关：人工不在线时把用户挂住，比直接建单更糟。
+    enable_human_interrupt: bool = False
     max_tool_iterations: int = 3
     intent_margin_threshold: float = 0.12
     intent_cache_ttl: int = 900
